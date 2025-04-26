@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedFit AI - Tibbiyot va Fitness Assistenti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            min-height: 100vh; /* Ekranning kamida 100% balandligini egallaydi */
+            background: linear-gradient(135deg, #e0f2f7 0%, #f1f8e9 100%); /* Yangi, tinchroq ranglar */
+            color: #37474f;
+        }
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px; /* Kichikroq padding */
+            overflow-y: auto;
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar h2 {
+            font-size: 24px; /* Kichikroq shrift */
+            margin-bottom: 20px; /* Kichikroq margin */
+            color: #009688; /* Asosiy rang */
+            text-align: center;
+        }
+        .sidebar h3 {
+            font-size: 18px; /* Kichikroq shrift */
+            margin-top: 15px; /* Kichikroq margin */
+            margin-bottom: 8px; /* Kichikroq margin */
+            color: #009688;
+            padding-left: 8px; /* Kichikroq padding */
+            border-left: 3px solid #009688;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px; /* Kichikroq margin */
+            padding: 12px 15px; /* Kichikroq padding */
+            background: #7eece3; /* Asosiy rangning yengilroq varianti */
+            border-radius: 15px; /* Kichikroq radius */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07); /* Kichikroq soya */
+            color: #020c63;
+            font-weight: bold; /* Yozuvni qalin qiladi */
+            font-size: 14px; /* Kichikroq shrift */
+        }
+        .sidebar ul li:hover {
+            background-color: #009688;
+            transform: scale(1.01); /* Kichikroq transformatsiya */
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); /* Kichikroq soya */
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Chatni pastga, inputni tepaga surish uchun */
+            padding: 20px; /* Kichikroq padding */
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 10px; /* Kichikroq radius */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Kichikroq soya */
+            margin: 10px; /* Kichikroq margin */
+        }
+        #chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 15px; /* Kichikroq padding */
+        }
+        .message {
+            background-color: #e0f7fa;
+            color: #263238;
+            border-radius: 8px; /* Kichikroq radius */
+            padding: 10px 14px; /* Kichikroq padding */
+            margin-bottom: 8px; /* Kichikroq margin */
+            width: fit-content;
+            max-width: 80%;
+            word-break: break-word;
+            font-size: 14px; /* Kichikroq shrift */
+        }
+        .user-message {
+            background-color: #009688;
+            color: white;
+            align-self: flex-end;
+        }
+        .ai-message {
+            align-self: flex-start;
+        }
+        .input-area {
+            display: flex;
+            align-items: center;
+            padding-top: 15px; /* Kichikroq padding */
+            border-top: 1px solid #e0e0e0;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px 12px; /* Kichikroq padding */
+            border: 1px solid #b0bec5;
+            border-radius: 20px; /* Kichikroq radius */
+            font-size: 14px; /* Kichikroq shrift */
+            margin-right: 8px; /* Kichikroq margin */
+        }
+        #user-input:focus {
+            outline: none;
+            border-color: #009688;
+            box-shadow: 0 0 5px rgba(0, 150, 136, 0.3);
+        }
+        .send-button, .mic-button {
+            background: #009688;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px; /* Kichikroq tugmalar */
+            height: 40px; /* Kichikroq tugmalar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px; /* Kichikroq shrift */
+            transition: background-color 0.2s ease-in-out;
+        }
+        .send-button:hover, .mic-button:hover {
+            background-color: #00796b;
+        }
+        .mic-button {
+            margin-left: 8px; /* Kichikroq margin */
+        }
+        b {
+            font-weight: 600;
+            color: #009688;
+        }
+
+        /* Kichik ekranlar uchun (telefonlar) */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                border-right: none;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+                padding: 15px; /* Yanada kichikroq padding */
+            }
+            .sidebar h2 {
+                font-size: 20px; /* Yanada kichikroq shrift */
+                margin-bottom: 15px; /* Yanada kichikroq margin */
+            }
+            .sidebar h3 {
+                font-size: 16px; /* Yanada kichikroq shrift */
+                margin-top: 12px; /* Yanada kichikroq margin */
+                margin-bottom: 6px; /* Yanada kichikroq margin */
+                padding-left: 6px; /* Yanada kichikroq padding */
+            }
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+            .sidebar ul li {
+                width: 48%; /* Taxminan yarim kenglik */
+                margin-bottom: 8px; /* Yanada kichikroq margin */
+                padding: 10px 12px; /* Yanada kichikroq padding */
+                font-size: 12px; /* Yanada kichikroq shrift */
+                border-radius: 12px; /* Yanada kichikroq radius */
+                text-align: center;
+            }
+            .main {
+                margin: 8px; /* Yanada kichikroq margin */
+                padding: 15px; /* Yanada kichikroq padding */
+                border-radius: 6px; /* Yanada kichikroq radius */
+            }
+            #chat-container {
+                padding-bottom: 12px; /* Yanada kichikroq padding */
+            }
+            .message {
+                font-size: 12px; /* Yanada kichikroq shrift */
+                padding: 8px 10px; /* Yanada kichikroq padding */
+                max-width: 90%;
+                border-radius: 6px; /* Yanada kichikroq radius */
+            }
+            .input-area {
+                padding-top: 12px; /* Yanada kichikroq padding */
+            }
+            #user-input {
+                font-size: 12px; /* Yanada kichikroq shrift */
+                padding: 8px 10px; /* Yanada kichikroq padding */
+                border-radius: 15px; /* Yanada kichikroq radius */
+            }
+            .send-button, .mic-button {
+                width: 35px; /* Yanada kichikroq tugmalar */
+                height: 35px; /* Yanada kichikroq tugmalar */
+                font-size: 16px; /* Yanada kichikroq shrift */
+            }
+            .send-button {
+                margin-right: 3px; /* Yanada kichikroq margin */
+            }
+            .mic-button {
+                margin-left: 3px; /* Yanada kichikroq margin */
+            }
+        }
+
+        /* O'rta ekranlar uchun (planshetlar) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 250px; /* Biroz kichikroq */
+                padding: 20px;
+            }
+            .sidebar h2 {
+                font-size: 22px;
+                margin-bottom: 18px;
+            }
+            .sidebar h3 {
+                font-size: 17px;
+                margin-top: 14px;
+                margin-bottom: 7px;
+                padding-left: 7px;
+            }
+            .sidebar ul li {
+                padding: 12px 15px;
+                font-size: 13px;
+                margin-bottom: 9px;
+                border-radius: 13px;
+            }
+            .main {
+                margin: 12px;
+                padding: 20px;
+            }
+            .message {
+                font-size: 13px;
+                padding: 9px 12px;
+                max-width: 85%;
+                border-radius: 7px;
+            }
+            #user-input {
+                font-size: 13px;
+                padding: 9px 11px;
+                border-radius: 18px;
+            }
+            .send-button, .mic-button {
+                width: 38px;
+                height: 38px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2><span style="color: #009688;">MedFit</span> AI</h2>
+        <h3>Erkaklar uchun</h3>
+        <ul>
+            <li onclick="sendMessage('Erkaklar uchun salom')">Salom</li>
+            <li onclick="sendMessage('Erkaklar uchun bugungi fitness mashqlarim qanday?')">Bugungi fitness mashqlarim qanday?</li>
+            <li onclick="sendMessage('Erkaklar uchun bugungi ovqatlanish tavsiyasi')">Bugungi ovqatlanish tavsiyasi</li>
+            <li onclick="sendMessage('Erkaklar uchun qanday mashqlar tavsiya qilasiz?')">Qanday mashqlar tavsiya qilasiz?</li>
+        </ul>
+        <h3>Ayollar uchun</h3>
+        <ul>
+            <li onclick="sendMessage('Ayollar uchun salom')">Salom</li>
+            <li onclick="sendMessage('Ayollar uchun bugungi fitness mashqlarim qanday?')">Bugungi fitness mashqlarim qanday?</li>
+            <li onclick="sendMessage('Ayollar uchun bugungi ovqatlanish tavsiyasi')">Bugungi ovqatlanish tavsiyasi</li>
+            <li onclick="sendMessage('Ayollar uchun qanday mashqlar tavsiya qilasiz?')">Qanday mashqlar tavsiya qilasiz?</li>
+        </ul>
+        <h3>Umumiy</h3>
+        <ul>
+            <li onclick="sendMessage('Suv ichishni eslatib tur')">Suv ichishni eslatib tur</li>
+            <li onclick="sendMessage('Vaznimni qanday nazorat qilaman?')">Vaznimni qanday nazorat qilaman?</li>
+            <li onclick="sendMessage('BMI qanday hisoblanadi?')">BMI qanday hisoblanadi?</li>
+            <li onclick="sendMessage('Bugun necha kaloriya kerak?')">Bugun necha kaloriya kerak?</li>
+            <li onclick="sendMessage('Tana haroratim normalmi?')">Tana haroratim normalmi?</li>
+            <li onclick="sendMessage('Yurak urish tezligi qanday?')">Yurak urish tezligi qanday?</li>
+            <li onclick="sendMessage('Bugun qancha mashq qilishim kerak?')">Bugun qancha mashq qilishim kerak?</li>
+            <li onclick="sendMessage('Sog‘lom turmush tarziga maslahat')">Sog‘lom turmush tarziga maslahat</li>
+            <li onclick="sendMessage('Motivatsiya kerak')">Motivatsiya kerak</li>
+            <li onclick="sendMessage('Stressni kamaytirish uchun maslahat')">Stressni kamaytirish uchun maslahat</li>
+            <li onclick="sendMessage('Bugungi statistikani ko‘rsat')">Bugungi statistikani ko‘rsat</li>
+            <li onclick="sendMessage('Orqaga qaytish')">Orqaga qaytish</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div id="chat-container">
+            <div class="message ai-message">Salom! Sizga qanday yordam bera olaman?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Savol bering...">
+            <button class="send-button" onclick="sendMessage(document.getElementById('user-input').value)">➤</button>
+            <button class="mic-button" onclick="startListening()">🎙️</button>
+        </div>
+    </div>
+
+<script>
+let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'uz-UZ';
+recognition.continuous = false;
+recognition.interimResults = false;
+
+const chatContainer = document.getElementById('chat-container');
+const userInput = document.getElementById('user-input');
+
+function addMessage(text, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    if (isUser) {
+        messageDiv.classList.add('user-message');messageDiv.innerHTML = text;
+    } else {
+        messageDiv.classList.add('ai-message');
+        messageDiv.innerHTML = "<b>MedFit AI:</b> " + text;
+    }
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+}
+
+function sendMessage(text) {
+    if (text.trim() !== '') {
+        addMessage(text, true);
+        userInput.value = '';
+        respondToVoice(text);
+    }
+}
+
+function startListening() {
+    userInput.placeholder = "Gapiring...";
+    recognition.start();
+}
+
+recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    userInput.value = transcript;
+    userInput.placeholder = "Savol bering...";
+};
+
+recognition.onend = function() {
+    userInput.placeholder = "Savol bering...";
+};
+
+function respondToVoice(text) {
+    let response = "";
+    text = text.toLowerCase();
+    let isMaleQuery = text.includes("erkaklar uchun") || text.includes("og'il bolalar uchun");
+    let isFemaleQuery = text.includes("ayollar uchun") || text.includes("qiz bolalar uchun");
+
+    if (text.includes("salom")) {
+        response = "Salom! Sizga qanday yordam bera olaman?";
+    } else if (text.includes("fitness mashq") || text.includes("mashqlarim")) {
+        if (isMaleQuery) {
+            response = "Bugun, erkaklar uchun: isinib olish uchun 5 daqiqa yengil kardio, so'ngra ko'krak va yelka uchun 3 ta mashqdan 3 to'plam (8-10 marta takrorlash), oyoqlar uchun 2 ta mashqdan 3 to'plam (10-12 marta takrorlash), va yakunida 5 daqiqa cho'zilish mashqlari.";
+        } else if (isFemaleQuery) {
+            response = "Bugun, ayollar uchun: isinib olish uchun 5 daqiqa yengil kardio, so'ngra dumba va son uchun 3 ta mashqdan 3 to'plam (12-15 marta takrorlash), qorin press uchun 2 ta mashqdan 3 to'plam (15-20 marta takrorlash), va yakunida 5 daqiqa cho'zilish mashqlari.";
+        } else {
+            response = "Bugun: isinib olish uchun 5 daqiqa yengil kardio, so'ngra 3 ta asosiy mashqdan 3 to'plam (har bir to'plamda 10-12 marta takrorlash), va yakunida 5 daqiqa cho'zilish mashqlari.";
+        }
+    } else if (text.includes("ovqatlanish tavsiyasi")) {
+        if (isMaleQuery) {
+            response = "Bugungi ovqatlanish uchun, erkaklar: Nonushtaga - tuxum va sariyog'li non, tushlikka - mol go'shti sabzavotlar bilan, kechki ovqatga - tovuq filesi va grechka.";
+        } else if (isFemaleQuery) {
+            response = "Bugungi ovqatlanish uchun, ayollar: Nonushtaga - mevali yormali bo'tqa, tushlikka - sabzavotli sho'rva va tovuq salati, kechki ovqatga - bug'da pishirilgan baliq va ismaloq.";
+        } else {
+            response = "Bugungi ovqatlanish uchun: Nonushtaga - tvorogli smuzi mevalar bilan, tushlikka - tovuq ko'kragi sabzavotlar bilan, kechki ovqatga - bug'da pishirilgan baliq va brokkoli.";
+        }
+    } else if (text.includes("qanday mashqlar")) {
+        if (isMaleQuery) {
+            response = "Erkaklar uchun kuchli mashqlar: shtanga bilan o'tirish, ko'krakdan shtanga ko'tarish, tortilish. Kardio uchun: yugurish, suzish.";
+        } else if (isFemaleQuery) {
+            response = "Ayollar uchun shakl beruvchi mashqlar: dumba ko'tarish, lunges, plank. Kardio uchun: tez yurish, aerobika.";
+        } else {
+            response = "Uy sharoitida bajarish uchun: plank, push-up, skvot va lunges mashqlari yaxshi tanlov.";
+        }
+    } else if (text.includes("kaloriya")) {
+        if (isMaleQuery) {
+            response = "Erkaklar uchun kunlik o'rtacha kaloriya ehtiyoji 2000-3000 kaloriya atrofida, faollik darajasiga qarab.";
+        } else if (isFemaleQuery) {
+            response = "Ayollar uchun kunlik o'rtacha kaloriya ehtiyoji 1500-2200 kaloriya atrofida, faollik darajasiga qarab.";
+        } else {
+            response = "Kunlik kaloriya ehtiyoji sizning yoshingizga, jinsingizga, vazningizga va faollik darajangizga bog'liq. O'rtacha kattalar uchun bu 2000-2500 kaloriya atrofida.";
+        }
+    }
+    // Umumiy so'rovlar uchun javoblar o'zgarishsiz qoladi
+    else if (text.includes("suv ichish")) {
+        response = "Eslatma o'rnatildi! Har bir soatda kamida bir stakan suv ichishni unutmang.";
+    } else if (text.includes("vaznim")) {
+        response = "Vazningizni nazorat qilish uchun muntazam ravishda taroziyda o'lchanib turing va natijalarni qayd qilib boring. Sog'lom vazn yo'qotish haftasiga 0.5-1 kg ni tashkil etadi.";
+    } else if (text.includes("bmi")) {
+        response = "Tana massasi indeksi (BMI) vazningizni (kilogramm) bo'yingizning kvadratiga (metr) bo'lish orqali hisoblanadi. Ideal BMI 18.5 dan 24.9 gacha.";
+    } else if (text.includes("harorat")) {
+        response = "Odamning normal tana harorati odatda 36.5°C dan 37.5°C gacha bo'ladi.";
+    } else if (text.includes("yurak urish")) {
+        response = "Dam olayotgan holatda yurak urish tezligi odatda daqiqasiga 60 dan 100 gacha zarba oralig'ida bo'ladi.";
+    } else if (text.includes("qancha mashq")) {
+        response = "Sog'liq uchun haftada kamida 150 daqiqa o'rta intensivlikdagi yoki 75 daqiqa yuqori intensivlikdagi jismoniy mashqlar tavsiya etiladi.";
+    } else if (text.includes("sog'lom turmush")) {
+        response = "Sog'lom turmush tarzi uchun: muvozanatli ovqatlanish, muntazam jismoniy faollik, yetarli uyqu va stressni boshqarish muhim.";
+    } else if (text.includes("motivatsiya")) {
+        response = "Siz buni uddalaysiz! Har bir kichik qadam ham muhim. Maqsadingizga intilishda davom eting!";
+    } else if (text.includes("stress")) {
+        response = "Stressni kamaytirish uchun: meditatsiya, chuqur nafas olish mashqlari, sevimli mashg'ulotlar bilan shug'ullanish va yetarli dam olishga harakat qiling.";
+    } else if (text.includes("statistika")) {
+        response = "Siz oxirgi 7 kun ichida 5 marta mashq qildingiz. Ajoyib natija!";
+    } else if (text.includes("orqaga")) {
+        response = "Asosiy menyuga qaytdingiz. Yana qanday yordam bera olaman?";
+    } else {
+        response = "Kechirasiz, men bu so'rovni tushunmadim. Iltimos, boshqa savol bering yoki buyruqni aniqroq ayting.";
+    }
+
+    addMessage(response, false);
+
+    let synth = window.speechSynthesis;
+    let utterThis = new SpeechSynthesisUtterance(response);
+    utterThis.lang = 'uz-UZ';
+    synth.speak(utterThis);
+}
+
+recognition.onerror = function(event) {
+    console.error("Speech recognition error:", event.error);
+    userInput.placeholder = "Xatolik yuz berdi...";
+};
+</script>
+
+</body>
+</html>

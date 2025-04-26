@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedFit AI</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        /* Sedbar menyu dizayni */
+        .sidenav {
+            background-color: #1e88e5;
+        }
+
+        .sidenav a {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .sidenav li {
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .sidenav li:hover {
+            background-color: #1565c0;
+        }
+
+        /* Bosh sahifa dizayni */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Profil kartasi */
+        .profile-card {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+        }
+
+        .profile-card h5 {
+            margin-bottom: 10px;
+        }
+
+        /* Sedbar menyu xususiyatlari */
+        .sidenav-trigger {
+            display: none;
+        }
+
+        /* Responziv dizayn */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidenav {
+                width: 100%;
+            }
+
+            .sidenav-trigger {
+                display: block;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                color: #fff;
+                font-size: 30px;
+            }
+
+            .sidenav {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidenav.sidenav-open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sedbar menyu -->
+    <ul id="slide-out" class="sidenav">
+        <li><a href="#home">Asosiy</a></li>
+        <li><a href="#personal-cabinet">Shaxsiy kabinet</a></li>
+        <li><a href="#daily-workout">Kunlik mashqlar</a></li>
+        <li><a href="#meal-recommendations">Ovqatlanish tavsiyalari</a></li>
+        <li><a href="#weight-bmi">Vazn va BMI</a></li>
+        <li><a href="#weekly-progress">Haftalik o‘sish</a></li>
+        <li><a href="#contact">Kontaktlar</a></li>
+    </ul>
+
+    <!-- Sedbar menyu tugmasi (mobil uchun) -->
+    <a href="javascript:void(0);" class="sidenav-trigger" onclick="toggleSidenav()">&#9776;</a>
+
+    <!-- Bosh sahifa -->
+    <div id="home" class="main-content">
+        <h2>MedFit AI - Sog‘lom turmush uchun AI yordamida fitness</h2>
+        <p>AI powered fitness tracking va sog‘lom turmush uchun tavsiyalar. Profilingizni yaratish va o‘zingizning maxsus mashq va dietalarni olish uchun ro‘yxatdan o‘ting.</p>
+    </div>
+
+    <!-- Shaxsiy kabinet -->
+    <div id="personal-cabinet" class="main-content">
+        <div class="profile-card">
+            <h5>Foydalanuvchi Profili</h5>
+            <p>Ismingiz: <span id="username">John Doe</span></p>
+            <p>Yosh: <span id="age">30</span></p>
+            <p>Maxsus tavsiyalar: Mashq qilish va ovqatlanish bo‘yicha maslahatlarga rioya qiling.</p>
+        </div>
+    </div>
+
+    <!-- Kunlik mashqlar -->
+    <div id="daily-workout" class="main-content">
+        <h3>Kunlik Mashq Rejasi</h3>
+        <p>Bugun uchun tavsiya etilgan mashqlar:</p>
+        <ul>
+            <li>Push-ups</li>
+            <li>Squats</li>
+            <li>Planks</li>
+        </ul>
+    </div>
+
+    <!-- Ovqatlanish tavsiyalari -->
+    <div id="meal-recommendations" class="main-content">
+        <h3>Kunlik Ovqatlanish Tavsiyalari</h3>
+        <ul>
+            <li>Nonushta: Yashil choy va jo'xori</li>
+            <li>O‘rtacha: Balandlikli salat</li>
+            <li>Kechki ovqat: Tovuq go‘shti va kartoshka</li>
+        </ul>
+    </div>
+
+    <!-- Vazn va BMI -->
+    <div id="weight-bmi" class="main-content">
+        <h3>Vazn va BMI Nazorati</h3>
+        <p>Vazningiz: <span id="weight">70 kg</span></p>
+        <p>BMI: <span id="bmi">23.5</span></p>
+    </div>
+
+    <!-- Haftalik o‘sish strategiyasi -->
+    <div id="weekly-progress" class="main-content">
+        <h3>Haftalik O‘sish Strategiyasi</h3>
+        <p>O‘tgan haftadagi o‘zgarishlar:</p>
+        <ul>
+            <li>Vazn: 1 kg kamaydi</li>
+            <li>BMI: 0.2 ga kamaydi</li>
+        </ul>
+    </div>
+
+    <!-- Kontaktlar -->
+    <div id="contact" class="main-content">
+        <h3>Kontaktlar</h3>
+        <p>Ijtimoiy tarmoqlar:</p>
+        <ul>
+            <li>Instagram: <a href="https://instagram.com">medfit_ai</a></li>
+            <li>Facebook: <a href="https://facebook.com">MedFitAI</a></li>
+            <li>Telegram: <a href="https://t.me/medfit_ai">medfit_ai</a></li>
+        </ul>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // Sedbar menyuni ochish va yopish
+        function toggleSidenav() {
+            const sidenav = document.getElementById('slide-out');
+            sidenav.classList.toggle('sidenav-open');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>MedFitAI | Shaxsiy Kabinet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap va Iconlar -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .dashboard-card {
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .icon-lg {
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    <a class="navbar-brand fw-bold text-white" href="#">MedFitAI</a>
+    <div class="ms-auto">
+      <span class="text-white me-3"><i class="fas fa-user-circle me-1"></i> Salom, Foydalanuvchi!</span>
+      <a href="#" class="btn btn-outline-light btn-sm">Chiqish</a>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <div class="container py-4">
+    <h3 class="mb-4">👤 Shaxsiy Kabinet</h3>
+    <div class="row g-4">
+      
+      <!-- Kunlik Mashqlar -->
+      <div class="col-md-4">
+        <div class="card dashboard-card p-4 text-center bg-white">
+          <i class="fas fa-dumbbell text-primary icon-lg mb-2"></i>
+          <h5>Kunlik Mashqlar</h5>
+          <p class="text-muted small">Shaxsiy mashq rejalaringizni ko‘ring</p>
+          <a href="#" class="btn btn-outline-primary btn-sm">Ko‘rish</a>
+        </div>
+      </div>
+
+      <!-- Kunlik Oziqlanish -->
+      <div class="col-md-4">
+        <div class="card dashboard-card p-4 text-center bg-white">
+          <i class="fas fa-apple-alt text-success icon-lg mb-2"></i>
+          <h5>Kunlik Ovqatlar</h5>
+          <p class="text-muted small">Tavsiya etilgan ratsion</p>
+          <a href="#" class="btn btn-outline-success btn-sm">Ko‘rish</a>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="col-md-4">
+        <div class="card dashboard-card p-4 text-center bg-white">
+          <i class="fas fa-chart-line text-info icon-lg mb-2"></i>
+          <h5>Progress</h5>
+          <p class="text-muted small">Natijalaringizni kuzating</p>
+          <a href="#" class="btn btn-outline-info btn-sm">Ko‘rish</a>
+        </div>
+      </div>
+
+      <!-- BMI & VAZN -->
+      <div class="col-md-4">
+        <div class="card dashboard-card p-4 text-center bg-white">
+          <i class="fas fa-weight text-warning icon-lg mb-2"></i>
+          <h5>BMI & Vazn</h5>
+          <p class="text-muted small">Vazn va tana holatini tahlil qilish</p>
+          <a href="#" class="btn btn-outline-warning btn-sm">Hisoblash</a>
+        </div>
+      </div>
+
+      <!-- Shifokor bilan Aloqa -->
+      <div class="col-md-4">
+        <div class="card dashboard-card p-4 text-center bg-white">
+          <i class="fas fa-user-md text-danger icon-lg mb-2"></i>
+          <h5>Shifokor bilan Aloqa</h5>
+          <p class="text-muted small">Yordam yoki maslahat olish</p>
+          <a href="#" class="btn btn-outline-danger btn-sm">Bog‘lanish</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

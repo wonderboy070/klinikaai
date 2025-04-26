@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <style>
+        /* Basic styles for video and overlay canvas */
+        .vedio-wrap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        #inputVideo {
+            border: 2px solid #007bff;
+            width: 450px;
+            height: 450px;
+            border-radius: 10px;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .site-main {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .user-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .user-info label,
+        .passport-date label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .user-info input,
+        .passport-date input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-wrap {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            background: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .register-warning {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .vedio-warning {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SITE MAIN START -->
+<main class="site-main">
+    <section class="hero">
+        <div class="container">
+            <form class="user-form" action="#" method="post">
+                <h2 class="form-title">Registratsiya</h2>
+                <span class="user-warning"></span>
+                <div class="user-info">
+                    <label>Ismingiz
+                        <input class="user user-name" type="text" name="user_name" maxlength="60" required>
+                    </label>
+                    <label>Familyangiz
+                        <input class="user user-last_name" type="text" name="user_last_name" maxlength="60" required>
+                    </label>
+                    <label class="password-wrap">
+                        Parol
+                        <input class="user user-password" type="password" name="user_password" maxlength="60" required autocomplete="off">
+                        <span class="password-eye"></span>
+                    </label>
+                   
+                <span class="register-warning">* Kameraga tushmagauncha yuborib bo'lmaydi</span>
+                <div class="btn-wrap">
+                    <button class="btn cam" type="button">Kamera</button>
+                    <button class="btn send" disabled type="submit">Yuborish</button>
+                </div>
+                <div class="form-link">
+                    <span>Ro'yxatdan o'tgan bo'lsangiz</span>
+                    <a class="register-link" href="login.html">Login</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+<!-- SITE MAIN FINISH -->
+
+<!-- SITE FOOTER START -->
+<footer class="site-footer">
+    <img class="imagess" src="" alt="">
+</footer>
+<!-- SITE FOOTER FINISH -->
+
+<div class="overlay-wrap"></div>
+<div class="vedio-wrap">
+    <video width="450" height="450" onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
+    <canvas id="overlay"></canvas>
+    <span class="vedio-warning"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    // Load models needed for face-api.js
+    async function loadModels() {
+        await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+        await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+        await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+        console.log("Models loaded!");
+    }
+
+    // Start the camera stream and enable face detection
+    async function startCamera() {
+        const video = document.getElementById('inputVideo');
+        const canvas = document.getElementById('overlay');
+        const context = canvas.getContext('2d');
+
+        // Set up the video stream
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = stream;
+
+                // Wait for the video to start playing
+                video.onplay = () => {
+                    setInterval(async () => {
+                        const detections = await faceapi.detectAllFaces(video)
+                            .withFaceLandmarks()
+                            .withFaceDescriptors();
+
+                        // Display the face detection result
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        faceapi.matchDimensions(canvas, video);
+                        const resizedDetections = faceapi.resizeResults(detections, video);
+                        faceapi.draw.drawDetections(canvas, resizedDetections);
+
+                        if (detections.length > 0) {
+                            // Enable the 'Submit' button if a face is detected
+                            document.querySelector('.btn.send').disabled = false;
+                        } else {
+                            // Disable the 'Submit' button if no face is detected
+                            document.querySelector('.btn.send').disabled = true;
+                        }
+                    }, 100);
+                };
+            } catch (error) {
+                console.error("Camera error:", error);
+            }
+        }
+    }
+
+    // Activate camera on button click
+    document.querySelector('.btn.cam').addEventListener('click', () => {
+        startCamera();
+        document.querySelector('.vedio-wrap').style.display = 'block';
+    });
+
+    // Handle form submission
+    document.querySelector('.user-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Here you can add your logic to handle form submission, including sending the captured image data or the registration form
+        const formData = new FormData(e.target);
+        axios.post('/register', formData)
+            .then(response => {
+                console.log('Registration successful:', response.data);
+            })
+            .catch(error => {
+                console.error('Registration failed:', error);
+            });
+    });
+
+    // Load models when the page loads
+    window.onload = loadModels;
+</script>
+</body>
+</html>

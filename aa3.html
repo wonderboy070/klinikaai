@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitnes Ovozli Yordamchi</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 12px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #menu button {
+            background-color: #007BFF;
+            margin-top: 10px;
+        }
+        #menu button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏋️ Fitnes Ovozli Yordamchi</h1>
+    <p>Ovozli buyruqlar orqali fitnes va tibbiy maslahatlar oling!</p>
+    <button id="startVoiceBtn" class="button">🎙️ Ovozli Buyruq Berish</button>
+    <div id="menu" style="display:none;">
+        <button class="button" onclick="askExerciseTypes()">Mashq Turlari</button>
+        <button class="button" onclick="askWeightLossDiet()">Vazn Tashlash Dietasi</button>
+        <button class="button" onclick="askMuscleGainDiet()">Mushak Massasi Oshirish Dietasi</button>
+        <button class="button" onclick="askRehabExercises()">Reabilitatsiya Mashqlari</button>
+        <button class="button" onclick="askHeartExercises()">Yurak-Qon Tomir Mashqlari</button>
+        <button class="button" onclick="askBackExercises()">Bel va Orqa Mashqlari</button>
+        <button class="button" onclick="askMassageInfo()">Tibbiy Massaj</button>
+        <button class="button" onclick="askStressExercises()">Stressni kamaytirish</button>
+        <button class="button" onclick="askMotivationQuote()">Motivatsiya</button>
+        <button class="button" onclick="askAboutSleep()">Uyqu Ahamiyati</button>
+        <button class="button" onclick="askAboutHydration()">Suv Ahamiyati</button>
+        <button class="button" onclick="askAboutRest()">Dam Olish Ahamiyati</button>
+    </div>
+    <div id="outputDiv" class="output" style="display:none;"></div>
+</div>
+
+<script>
+    let recognition;
+    let isListening = false;
+    const startVoiceBtn = document.getElementById('startVoiceBtn');
+    const menu = document.getElementById('menu');
+    const outputDiv = document.getElementById('outputDiv');
+
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'uz-UZ';
+        window.speechSynthesis.speak(msg);
+    }
+
+    function showMenu() {
+        speak("Menyudan tanlang yoki ovozli buyruq bering.");
+        menu.style.display = 'block';
+    }
+
+    function askExerciseTypes() {
+        speak("Mashqlar: Kardio va kuch mashqlari. Har ikkalasi ham sog'liq uchun foydali.");
+    }
+    function askWeightLossDiet() {
+        speak("Vazn tashlash uchun ko'proq oqsil va sabzavotlar iste'mol qiling, shakar va yog'ni kamaytiring.");
+    }
+    function askMuscleGainDiet() {
+        speak("Mushak massasini oshirish uchun oqsilga boy ovqatlar va ko'p suv ichish zarur.");
+    }
+    function askRehabExercises() {
+        speak("Reabilitatsiya mashqlari jarohatdan keyingi tiklanishni tezlashtiradi. Yengil mashqlar va cho'zish mashqlari tavsiya etiladi.");
+    }
+    function askHeartExercises() {
+        speak("Yurak-qon tomir sog'ligi uchun yurish, suzish va velosiped haydash mashqlari foydalidir.");
+    }
+    function askBackExercises() {
+        speak("Orqa va bel sog'ligi uchun plank, pastki orqa mashqlari va to'g'ri o‘tirish odatlarini rivojlantirish kerak.");
+    }
+    function askMassageInfo() {
+        speak("Tibbiy massaj qon aylanishini yaxshilaydi, mushaklarning tiklanishini tezlashtiradi va stressni kamaytiradi.");
+    }
+    function askStressExercises() {
+        speak("Stressni kamaytirish uchun nafas olish mashqlari, meditatsiya va yoga tavsiya qilinadi.");
+    }
+    function askMotivationQuote() {
+        const quotes = [
+            "Harakat doim natija beradi.",
+            "Bugun qilgan harakatlaringiz kelajakdagi sizni yaratadi.",
+            "Chekinma, oldinga intil.",
+            "Qiyin damlar sizni kuchli qiladi."
+        ];
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        speak(randomQuote);
+    }
+    function askAboutSleep() {
+        speak("Yetarli uyqu mushaklarning tiklanishi va energiya uchun zarur. Har kecha 7-9 soat uyqu tavsiya qilinadi.");
+    }
+    function askAboutHydration() {
+        speak("Suv ichish tanadagi funksiyalarni yaxshilaydi. Mashqlardan oldin va keyin suv ichishni unutmang.");
+    }
+    function askAboutRest() {
+        speak("Dam olish mushaklarning tiklanishi uchun zarur. Har hafta kamida bir kun dam olish tavsiya qilinadi.");
+    }
+
+    function processVoiceCommand(command) {
+        if (command.includes('mashq')) askExerciseTypes();
+        else if (command.includes('vazn')) askWeightLossDiet();
+        else if (command.includes('mushak')) askMuscleGainDiet();
+        else if (command.includes('reabilitatsiya')) askRehabExercises();
+        else if (command.includes('yurak')) askHeartExercises();
+        else if (command.includes('orqa') || command.includes('bel')) askBackExercises();
+        else if (command.includes('massaj')) askMassageInfo();
+        else if (command.includes('stress')) askStressExercises();
+        else if (command.includes('motivatsiya')) askMotivationQuote();
+        else if (command.includes('uyqu')) askAboutSleep();
+        else if (command.includes('suv')) askAboutHydration();
+        else if (command.includes('dam')) askAboutRest();
+        else speak("Kechirasiz, bu buyruqni tushunmadim.");
+    }
+
+    function startRecognition() {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'uz-UZ';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = function(event) {
+            const command = event.results[0][0].transcript.toLowerCase();
+            outputDiv.style.display = 'block';
+            outputDiv.textContent = `Siz aytdingiz: ${command}`;
+            processVoiceCommand(command);
+        };
+
+        recognition.onspeechend = function() {
+            recognition.stop();
+            isListening = false;
+            startVoiceBtn.textContent = '🎙️ Ovozli Buyruq Berish';
+        };
+
+        recognition.onerror = function(event) {
+            outputDiv.textContent = `Xatolik: ${event.error}`;
+        };
+
+        recognition.start();
+        isListening = true;
+        startVoiceBtn.textContent = '🎧 Tinglanmoqda...';
+    }
+
+    startVoiceBtn.addEventListener('click', function() {
+        if (!isListening) {
+            speak("Ovozli buyruq boshlanmoqda.");
+            startRecognition();
+        } else {
+            recognition.stop();
+            isListening = false;
+            startVoiceBtn.textContent = '🎙️ Ovozli Buyruq Berish';
+            speak("Tinglash to'xtatildi.");
+        }
+    });
+
+    // Start with showing the menu
+    showMenu();
+</script>
+
+</body>
+</html>

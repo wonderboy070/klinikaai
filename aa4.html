@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedFit AI - Ovozli Assistant</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6B73FF, #000DFF);
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+    .microphone {
+      margin-top: 30px;
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .output {
+      margin-top: 30px;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 20px;
+      min-height: 100px;
+      font-size: 18px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🏋️‍♂️ MedFit AI</h1>
+<p>Gapiring yoki "Mashq boshlash", "Ovqat reja" kabi so‘zlarni ayting!</p>
+
+<div class="microphone" onclick="startListening()">
+  🎤
+</div>
+
+<div id="output" class="output"></div>
+
+<script>
+let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'uz-UZ'; // O'zbek tili
+recognition.continuous = false;
+recognition.interimResults = false;
+
+function startListening() {
+    recognition.start();
+}
+
+recognition.onresult = function(event) {
+    let transcript = event.results[0][0].transcript;
+    document.getElementById('output').innerHTML = "<b>Siz dedingiz:</b> " + transcript;
+    respondToVoice(transcript);
+};
+
+function respondToVoice(text) {
+    let response = "";
+
+    text = text.toLowerCase();
+
+    if (text.includes("salom")) {
+        response = "Assalomu alaykum! MedFit AI xizmatida.";
+    } else if (text.includes("mashq") || text.includes("mashqlar")) {
+        response = "Bugun siz uchun 5 daqiqalik isinib olish va 30 daqiqa kardio mashq tayyorlab qo'ydim.";
+    } else if (text.includes("ovqat") || text.includes("reja")) {
+        response = "Siz uchun bugungi ovqat rejasi tayyor: ertalab jo‘xori bo‘tqasi, tushlikda tovuq filesi, kechki ovqatda salat.";
+    } else if (text.includes("vazn") || text.includes("bmi")) {
+        response = "BMI hisoblash uchun iltimos, vazningiz va bo'yingizni ayting.";
+    } else if (text.includes("motivatsiya")) {
+        response = "Unutmang! Har bir kichik qadam - katta o‘zgarishga olib keladi.";
+    } else if (text.includes("holat") || text.includes("salomatlik")) {
+        response = "Tana haroratingiz va yurak urish tezligini tekshirayotganman... Hammasi joyida!";
+    } else if (text.includes("statistika")) {
+        response = "Siz 3 kun ketma-ket mashq qildingiz! Zo‘r davom etyapsiz!";
+    } else {
+        response = "Kechirasiz, tushunmadim. Iltimos, boshqa buyruq bering.";
+    }
+
+    document.getElementById('output').innerHTML += "<br><br><b>Javob:</b> " + response;
+
+    let synth = window.speechSynthesis;
+    let utterThis = new SpeechSynthesisUtterance(response);
+    utterThis.lang = 'uz-UZ';
+    synth.speak(utterThis);
+}
+
+recognition.onerror = function(event) {
+    document.getElementById('output').innerHTML = "Xatolik yuz berdi: " + event.error;
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skelet Kuzatuv</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+        }
+        video, canvas {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        canvas { z-index: 10; }
+        video { display: none; }
+    </style>
+</head>
+<body>
+    <video id="video" width="640" height="480" autoplay playsinline></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        async function setupCamera() {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: true
+            });
+            video.srcObject = stream;
+            return new Promise(resolve => {
+                video.onloadedmetadata = () => resolve(video);
+            });
+        }
+
+        async function loadModel() {
+            return await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+        }
+
+        function drawKeypoints(keypoints) {
+            ctx.fillStyle = "cyan";
+            keypoints.forEach(point => {
+                if (point.score > 0.5) {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 10, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function drawSkeleton(keypoints) {
+            const skeleton = [
+                [0, 1], [1, 2], [1, 3], [2, 4], [3, 5],
+                [5, 6], [6, 7], [5, 8], [8, 9], [11, 12], 
+                [11, 13], [12, 14], [0, 11], [0, 12]
+            ];
+
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = 5;
+
+            skeleton.forEach(([i, j]) => {
+                const a = keypoints[i];
+                const b = keypoints[j];
+                if (a.score > 0.5 && b.score > 0.5) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            });
+        }
+
+        async function detectPose(video, model) {
+            const poses = await model.estimatePoses(video);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (poses.length > 0) {
+                drawKeypoints(poses[0].keypoints);
+                drawSkeleton(poses[0].keypoints);
+            }
+
+            requestAnimationFrame(() => detectPose(video, model));
+        }
+
+        async function main() {
+            await setupCamera();
+            const model = await loadModel();
+            detectPose(video, model);
+        }
+
+        main();
+    </script>
+</body>
+</html>

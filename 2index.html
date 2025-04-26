@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedFit AI – Fitnes Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+  <style>
+    /* Oldingi CSS kodlari shu yerda */
+    /* ... */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 280px;
+      height: 100vh;
+      background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding-top: 30px;
+      color: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .sidebar-logo h2 {
+      font-weight: bold;
+      font-size: 24px;
+      color: #00ffe7;
+      margin-bottom: 5px;
+    }
+    .sidebar-logo p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+    .sidebar-menu {
+      width: 100%;
+      padding: 0;
+      list-style: none;
+    }
+    .sidebar-menu li {
+      padding: 12px 25px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .sidebar-menu li:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    .sidebar-menu li.active {
+      background-color: #00ffe71a;
+      border-left: 5px solid #00ffe7;
+    }
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      color: #eee;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .sidebar-menu li a i {
+      margin-right: 15px;
+      font-size: 1.2rem;
+    }
+    .main {
+      flex-grow: 1;
+      margin-left: 280px;
+      padding: 30px;
+      background-color: #f8f9fa;
+    }
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .main-header h3 {
+      font-size: 1.75rem;
+      color: #333;
+      margin: 0;
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+      background-color: #fff;
+    }
+    .card-header {
+      background-color: #f0f0f0;
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      font-weight: bold;
+      color: #555;
+    }
+    .card-body {
+      padding: 20px;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    /* Zamonaviy inputlar */
+    .form-control {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #00ffe7;
+      box-shadow: 0 0 5px rgba(0, 255, 231, 0.5);
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 10px;
+    }
+    .btn-secondary:hover {
+      background-color: #545b62;
+      border-color: #545b62;
+    }
+    /* Kamera kuzatuv uchun qo'shimcha stil */
+    #camera-container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+      margin-bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333; /* Kamera o'rnida ko'rinadigan fon */
+    }
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none; /* Dastlab yashirin */
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+    #camera-controls button {
+      margin-right: 10px;
+    }
+    /* Kamera kuzatuv uchun qo'shimcha stil */
+    #camera-container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+      margin-bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333; /* Kamera o'rnida ko'rinadigan fon */
+    }
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none; /* Dastlab yashirin */
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+    #camera-controls button {
+      margin-right: 10px;
+    }
+    #gantel-counter {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 11;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h2><i class="fas fa-dumbbell"></i> MedFit AI</h2>
+      <p>Sizning shaxsiy fitnes yordamchingiz</p>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="active" onclick="showSection('home')"><a href="#"><i class="fas fa-home"></i> Bosh sahifa</a></li>
+      <li onclick="showSection('profile')"><a href="#"><i class="fas fa-user-circle"></i> Shaxsiy profil</a></li>
+      <li onclick="showSection('meal')"><a href="#"><i class="fas fa-utensils"></i> Kunlik Ovqat</a></li>
+      <li onclick="showSection('workout')"><a href="#"><i class="fas fa-dumbbell"></i> Mashqlar Rejasi</a></li>
+      <li onclick="showSection('bmi')"><a href="#"><i class="fas fa-weight"></i> BMI & Vazn</a></li>
+      <li onclick="showSection('weekly')"><a href="#"><i class="fas fa-calendar-week"></i> Haftalik Reja</a></li>
+      <li onclick="showSection('ai')"><a href="#"><i class="fas fa-brain"></i> AI Tahlil</a></li>
+      <li onclick="showSection('camera')"><a href="#"><i class="fas fa-video"></i> Kamera Kuzatuv</a></li>
+      <li onclick="showSection('stats')"><a href="#"><i class="fas fa-chart-line"></i> Statistika</a></li>
+      <li onclick="showSection('settings')"><a href="#"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+      <li onclick="showSection('login')"><a href="#"><i class="fas fa-sign-in-alt"></i> Kirish / Ro‘yxat</a></li>
+      <li><a href="#"><i class="fas fa-sign-out-alt"></i> Chiqish</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="main-header">
+      <h3><i class="fas fa-tachometer-alt"></i> Boshqaruv Paneli</h3>
+    </div>
+    <div class="container-fluid">
+      <div id="home" class="card section active">
+        <div class="card-header">🏠 Bosh sahifa</div>
+        <div class="card-body">
+          <p class="lead">Xush kelibsiz! Bu yerda sizning sog'lig'ingiz va sport maqsadlaringiz uchun sun'iy intellekt yordamida eng yaxshi tavsiyalarni olasiz. Quyidagi bo'limlardan foydalanib, profilingizni ko'ring, ovqatlanish rejangizni kuzating, mashqlar dasturlarini ko'ring va boshqa ko'plab imkoniyatlardan foydalaning.</p>
+          <hr class="my-4">
+          <p>Tezkor havolalar:</p>
+          <div class="d-grid gap-2 d-md-block">
+            <button class="btn btn-outline-primary me-2" type="button" onclick="showSection('profile')"><i class="fas fa-user-circle"></i> Profil</button>
+            <button class="btn btn-outline-success me-2" type="button" onclick="showSection('meal')"><i class="fas fa-utensils"></i> Ovqat</button>
+            <button class="btn btn-outline-info" type="button" onclick="showSection('workout')"><i class="fas fa-dumbbell"></i> Mashqlar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="profile" class="card section">
+        <div class="card-header">🧍‍♂️ Shaxsiy Profil</div>
+        <div class="card-body">
+          <h5 class="card-title">Profil ma'lumotlari</h5>
+          <p><strong>Ism:</strong> Jamshid</p>
+          <p><strong>Yosh:</strong> 28</p>
+          <p><strong>Jins:</strong> Erkak</p>
+          <p><strong>Bo'y:</strong> 176 sm</p>
+          <p><strong>Vazn:</strong> 74 kg</p>
+          <p><strong>Maqsad:</strong> Mushak to'plash</p>
+          <button class="btn btn-primary"><i class="fas fa-edit"></i> Tahrirlash</button>
+          <hr class="my-3">
+          <h6>Shaxsiy ma'lumotlarni kiriting</h6>
+          <form>
+            <div class="mb-3">
+              <label for="name" class="form-label">Ism:</label>
+              <input type="text" class="form-control" id="name" value="Jamshid">
+            </div>
+            <div class="mb-3">
+              <label for="age" class="form-label">Yosh:</label>
+              <input type="number" class="form-control" id="age" value="28">
+            </div>
+            <div class="mb-3">
+              <label for="gender" class="form-label">Jins:</label>
+              <select class="form-control" id="gender">
+                <option value="male" selected>Erkak</option>
+                <option value="female">Ayol</option>
+                <option value="other">Boshqa</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="height" class="form-label">Bo'y (sm):</label>
+              <input type="number" class="form-control" id="height" value="176">
+            </div>
+            <div class="mb-3">
+              <label for="weight" class="form-label">Vazn (kg):</label>
+              <input type="number" class="form-control" id="weight" value="74">
+            </div>
+            <div class="mb-3">
+              <label for="goal" class="form-label">Maqsad:</label>
+              <select class="form-control" id="goal">
+                <option value="muscle_gain" selected>Mushak to'plash</option>
+                <option value="weight_loss">Vazn yo'qotish</option>
+                <option value="general_fitness">Umumiy fitnes</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Saqlash</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="meal" class="card section">
+        <div class="card-header">🍱 Kunlik Ovqat Rejasi (1-kun)</div>
+        <div class="card-body">
+          <h5 class="card-title">Bugungi ovqatlanish rejasi</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Nonushta (350 kcal):</strong> Yulaf (50g, 150 kcal), sut (200ml, 100 kcal), mevalar (100g, 100 kcal), yong'oqlar (20g, 150 kcal, 7g protein)</li>
+            <li class="list-group-item"><strong>Tushlik (500 kcal, 30g protein):</strong> Tovuq filesi (150g, 225 kcal, 33g protein), guruch (100g, 130 kcal), sabzavotlar (200g, 80 kcal), zaytun yog'i (1 osh qoshiq, 65 kcal)</li>
+            <li class="list-group-item"><strong>Kechki ovqat (450 kcal, 25g protein):</strong> Baliq (150g, 180 kcal, 26g protein), brokkoli (150g, 55 kcal), sabzavotli sho'rva (200ml, 150 kcal), bir bo'lak non (65 kcal)</li>
+            <li class="list-group-item"><strong>Oraliq ovqatlar (200 kcal, 10g protein):</strong> Olma (1 dona, 95 kcal), tvorog (50g, 105 kcal, 6g protein), bodom (15g, 100 kcal, 3g protein)</li>
+          </ul>
+          <p class="mt-3"><strong>Kunlik kaloriya:</strong> 1500 kcal, <strong>Protein:</strong> 66g</p>
+          <button class="btn btn-info mt-3"><i class="fas fa-calendar-alt"></i> Boshqa kunni ko'rish</button>
+          <hr class="my-3">
+          <h6>Bir oylik ovqatlanish rejasi</h6>
+          <p class="text-muted">Bu yerda bir oylik taxminiy ovqatlanish rejangizni ko'rishingiz mumkin (dinamik emas).</p>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ko'rish</button>
+        </div>
+      </div>
+
+      <div id="workout" class="card section">
+        <div class="card-header">🏋️ Mashqlar Rejasi (1-kun: Ko'krak va Triseps)</div>
+        <div class="card-body">
+          <h5 class="card-title">Bugungi mashqlar dasturi</h5>
+          <p><strong>Isinish:</strong> Kardio (yugurish yo'lakchasida) - 10 daqiqa</p>
+          <ol class="list-group list-group-numbered">
+            <li class="list-group-item"><strong>Skameyka press (shtanga):</strong> 3 ta set, 8-12 takrorlash</li>
+            <li class="list-group-item"><strong>Dumbbell flyes (gantellar bilan yoyish):</strong> 3 ta set, 10-15 takrorlash</li>
+            <li class="list-group-item"><strong>Incline dumbbell press (qiyalikda gantel press):</strong> 3 ta set, 10-15 takrorlash</li>
+            <li class="list-group-item"><strong>Triceps pushdown (kanat bilan pastga tortish):</strong> 3 ta set, 12-15 takrorlash</li>
+            <li class="list-group-item"><strong>Overhead dumbbell extension (bosh tepasida gantel bilan yoyish):</strong> 3 ta set, 12-15 takrorlash</li>
+          </ol>
+          <p class="mt-3"><strong>Sovunish:</strong> Stretching - 10 daqiqa</p>
+          <button class="btn btn-warning mt-3"><i class="fas fa-calendar-alt"></i> Boshqa kunni ko'rish</button>
+          <hr class="my-3">
+          <h6>Bir oylik mashqlar rejasi</h6>
+          <p class="text-muted">Bu yerda bir oylik taxminiy mashqlar rejangizni ko'rishingiz mumkin (dinamik emas).</p>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ko'rish</button>
+        </div>
+      </div>
+
+      <div id="bmi" class="card section">
+        <div class="card-header">📊 BMI & Vazn Nazorati</div>
+        <div class="card-body">
+          <h5 class="card-title">Tana Massasi Indeksi (BMI)</h5>
+          <p><strong>Joriy vazn:</strong> 74 kg</p>
+          <p><strong>Bo'y:</strong> 1.76 m</p>
+          <p><strong>BMI:</strong> 23.9 (Normal vazn)</p>
+          <p class="mt-3">Sizning vazningiz normal diapazonda. Sog'lom turmush tarzini davom ettiring.</p>
+          <hr class="my-3">
+          <h6>BMI kalkulyatori</h6>
+          <form>
+            <div class="mb-3">
+              <label for="weight" class="form-label">Vazn (kg):</label>
+              <input type="number" class="form-control" id="weight-calc" placeholder="Kiriting">
+            </div>
+            <div class="mb-3">
+              <label for="height" class="form-label">Bo'y (m):</label>
+              <input type="number" class="form-control" id="height-calc" placeholder="Kiriting">
+            </div>
+            <button type="button" class="btn btn-success" onclick="calculateBMI()">Hisoblash</button>
+            <p id="bmi-result" class="mt-2"></p>
+            <p id="weight-advice" class="mt-2"></p>
+          </form>
+          <p class="mt-3">Vazn o'zgarishlari tarixi <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-history"></i> Ko'rish</button></p>
+        </div>
+      </div>
+
+      <div id="weekly" class="card section">
+        <div class="card-header">📅 Haftalik Reja</div>
+        <div class="card-body">
+          <h5 class="card-title">Haftalik mashqlar va dam olish rejasi</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Dushanba:</strong> Ko'krak va Triseps</li>
+            <li class="list-group-item"><strong>Seshanba:</strong> Orqa va Biseps</li>
+            <li class="list-group-item"><strong>Chorshanba:</strong> Oyoqlar</li>
+            <li class="<li class="list-group-item"><strong>Payshanba:</strong> Dam olish</li>
+            <li class="list-group-item"><strong>Juma:</strong> Yelka va Qorin</li>
+            <li class="list-group-item"><strong>Shanba:</strong> Kardio</li>
+            <li class="list-group-item"><strong>Yakshanba:</strong> Dam olish</li>
+          </ul>
+          <button class="btn btn-primary mt-3"><i class="fas fa-edit"></i> Haftalik rejani tahrirlash</button>
+          <hr class="my-3">
+          <h6>Bir oylik reja</h6>
+          <p class="text-muted">Bu yerda bir oylik taxminiy rejangizni ko'rishingiz mumkin (dinamik emas).</p>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Ko'rish</button>
+        </div>
+      </div>
+
+      <div id="ai" class="card section">
+        <div class="card-header">🧠 AI Tahlil</div>
+        <div class="card-body">
+          <h5 class="card-title">Sun'iy intellekt tahlili va tavsiyalar</h5>
+          <p>AI tizimi sizning mashqlar davomiyligingiz, yurak urish tezligingiz, va ovqatlanish holatingizni tahlil qiladi hamda sizning maqsadlaringizga moslashtirilgan individual reja va tavsiyalar beradi.</p>
+          <p><strong>Oxirgi tahlil natijalari (taxminiy):</strong></p>
+          <ul>
+            <li>Protein iste'moli: Yetarli (taxminan 1.6g/kg tana vazniga)</li>
+            <li>Kaloriya iste'moli: Maqsadga mos (mushak to'plash uchun biroz yuqori)</li>
+            <li>Mashqlar intensivligi: O'rtacha</li>
+          </ul>
+          <p><strong>Tavsiyalar (taxminiy):</strong></p>
+          <ul>
+            <li>Mashqlar davomiyligini biroz oshirish mumkin.</li>
+            <li>Uyqu sifatiga e'tibor bering.</li>
+          </ul>
+          <button class="btn btn-info mt-3"><i class="fas fa-sync-alt"></i> Tahlilni yangilash</button>
+          <hr class="my-3">
+          <h6>AI tahlil tarixi</h6>
+          <p class="text-muted">Bu yerda tahlil tarixini ko'rishingiz mumkin (dinamik emas).</p>
+          <button class="btn btn-secondary btn-sm"><i class="fas fa-history"></i> Ko'rish</button>
+        </div>
+      </div>
+
+      <div id="camera" class="card section">
+        <div class="card-header">🎥 Kamera Kuzatuv</div>
+        <div class="card-body">
+          <h5 class="card-title">Mashq jarayonini kamera orqali kuzatish (faqat skelet)</h5>
+          <p>Web-kamerangizga ruxsat bering va AI faqat skeletingizni kuzatib ko'rsatadi. Gantel ko'tarish sonini hisoblash funksiyasi prototip bosqichida.</p>
+          <div id="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+            <div id="gantel-counter">O'ng: 0, Chap: 0</div>
+          </div>
+          <div id="camera-controls" class="mb-3">
+            <button class="btn btn-success btn-sm" onclick="enableCamera()"><i class="fas fa-play"></i> Kamerani yoqish</button>
+            <button class="btn btn-danger btn-sm" onclick="disableCamera()"><i class="fas fa-stop"></i> Kamerani o'chirish</button>
+          </div>
+          <p class="mt-2 text-muted"><strong>Eslatma:</strong> Kamera kuzatuvidan foydalanish uchun brauzeringizga kamera ruxsatini berishingiz kerak.</p>
+        </div>
+      </div>
+
+      <div id="stats" class="card section">
+        <div class="card-header">📈 Statistika (So'nggi 30 kun)</div>
+        <div class="card-body">
+          <h5 class="card-title">Sizning fitnes statistikangiz</h5>
+          <p>So'nggi 30 kun uchun:</p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Umumiy mashq vaqti:</strong> Taxminan 20 soat</li>
+            <li class="list-group-item"><strong>O'rtacha kaloriya yoqilgan (har bir mashq):</strong> 400 kcal</li>
+            <li class="list-group-item"><strong>Vazn o'zgarishi:</strong> +0.5 kg</li>
+            <li class="list-group-item"><strong>Mashqlar soni:</strong> 12 ta</li>
+          </ul>
+          <button class="btn btn-outline-info mt-3"><i class="fas fa-chart-bar"></i> Batafsil statistika</button>
+          <hr class="my-3">
+          <h6>Statistika filtrlari</h6>
+          <p class="text-muted">Bu yerda statistika ko'rsatkichlarini filtrlashingiz mumkin (dinamik emas).</p>
+          <div class="mb-3">
+            <label for="statsPeriod" class="form-label">Davr:</label>
+            <select class="form-control form-control-sm" id="statsPeriod">
+              <option value="week">Hafta</option>
+              <option value="month" selected>Oy</option>
+              <option value="year">Yil</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="settings" class="card section">
+        <div class="card-header">⚙️ Sozlamalar</div>
+        <div class="card-body">
+          <h5 class="card-title">Panel sozlamalari</h5>
+          <div class="mb-3">
+            <label for="language" class="form-label">Til:</label>
+            <select class="form-control" id="language">
+              <option value="uz" selected>O‘zbek</option>
+              <option value="en">Ingliz</option>
+              <option value="ru">Rus</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tema:</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="themeSwitch">
+              <label class="form-check-label" for="themeSwitch">Yorug‘ / Qorong‘i</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Bildirishnomalar:</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="notificationSwitch" checked>
+              <label class="form-check-label" for="notificationSwitch">Yoqilgan / O‘chirilgan</label>
+            </div>
+          </div>
+          <button class="btn btn-primary"><i class="fas fa-save"></i> Saqlash</button>
+          <hr class="my-3">
+          <h6>Foydalanuvchi sozlamalari</h6>
+          <p class="text-muted">Bu yerda shaxsiy sozlamalaringizni o'zgartirishingiz mumkin (funktsional emas).</p>
+          <button class="btn btn-outline-secondary btn-sm"><i class="fas fa-user-cog"></i> Sozlash</button>
+        </div>
+      </div>
+
+      <div id="login" class="card section">
+        <div class="card-header">🔐 Kirish / Ro‘yxatdan o‘tish</div>
+        <div class="card-body">
+          <h5 class="card-title">Hisobingizga kiring yoki yangi hisob yarating</h5>
+          <form>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="example@mail.com">
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Parol</label>
+              <input type="password" class="form-control" id="password" placeholder="*******">
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Kirish</button>
+            <button type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Ro‘yxatdan o‘tish</button>
+          </form>
+          <p class="mt-3"><a href="#">Parolni unutdingizmi?</a></p>
+          <hr class="my-3">
+          <h6>Yangi hisob yaratish</h6>
+          <p class="text-muted">Yangi hisob yaratish uchun quyidagi formani to'ldiring (funktsional emas).</p>
+          <button class="btn btn-outline-success btn-sm"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const sections = document.querySelectorAll('.section');
+    const menuItems = document.querySelectorAll('.sidebar-menu li');
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const gantelCounter = document.getElementById("gantel-counter");
+    let model = null;
+    let ctx = null;
+    let cameraStream = null;
+    let isCameraActive = false;
+    let chapKotarilishSoni = 0;
+    let ongKotarilishSoni = 0;
+    let lastLeftWristY = null;
+    let lastRightWristY = null;
+    const подниманиеThreshold = 50; // Pikseldagi harakat chegarasi
+
+    function showSection(id) {
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+
+      menuItems.forEach(item => item.classList.remove('active'));
+      const activeMenuItem = Array.from(menuItems).find(li => li.getAttribute('onclick') === `showSection('${id}')`);
+      if (activeMenuItem) {
+        activeMenuItem.classList.add('active');
+      }
+
+      if (id === 'camera') {
+        enableCamera();
+      } else {
+        disableCamera();
+      }
+    }
+
+    function calculateBMI() {
+      const weightInput = document.getElementById('weight-calc');
+      const heightInput = document.getElementById('height-calc');
+      const bmiResultElement = document.getElementById('bmi-result');
+      const weightAdviceElement = document.getElementById('weight-advice');
+
+      const weight = parseFloat(weightInput.value);
+      const height = parseFloat(heightInput.value);
+
+      if (isNaN(weight) || isNaN(height) || height <= 0) {
+        bmiResultElement.textContent = "Iltimos, to'g'ri vazn va bo'yni kiriting.";
+        weightAdviceElement.textContent = "";
+        return;
+      }
+
+      const bmi = weight / (height * height);
+      bmiResultElement.textContent = `Sizning BMI: ${bmi.toFixed(1)}`;
+
+      if (bmi < 18.5) {
+        weightAdviceElement.textContent = "Sizning vazningiz yetarli emas. Shifokor bilan maslahatlashing.";
+      } else if (bmi >= 18.5 && bmi < 25) {
+        weightAdviceElement.textContent = "Sizning vazningiz normal.";
+      } else if (bmi >= 25 && bmi < 30) {
+        weightAdviceElement.textContent = "Sizning vazningiz ortiqcha. Sog'lom turmush tarziga o'ting.";
+      } else {
+        weightAdviceElement.textContent = "Sizda semizlik kuzatilmoqda. Shifokor bilan maslahatlashing.";
+      }
+    }
+
+    async function setupCamera() {
+      if (!video || !canvas) return null;
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 }
+      });
+      video.srcObject = stream;
+      cameraStream = stream;
+      return new Promise(resolve => {
+        video.onloadedmetadata = () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          ctx = canvas.getContext("2d");
+          resolve(video);
+        };
+      });
+    }
+
+    async function loadModel() {
+      return await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+    }
+
+    function drawKeypoints(keypoints, ctx) {
+      ctx.fillStyle = "cyan";
+      keypoints.forEach(point => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+    }
+
+    function drawSkeleton(keypoints, ctx) {
+      const skeleton = [
+        [0, 1], [1, 3], [0, 2], [2, 4], [5, 6], [5, 7], [7, 9], [6, 8], [8, 10],
+        [11, 12], [12, 14], [14, 16], [11, 13], [13, 15], [5, 11], [6, 12]
+      ];
+      ctx.strokeStyle = "#00FF00";
+      ctx.lineWidth = 3;
+      skeleton.forEach(([i, j]) => {
+        const a = keypoints[i];
+        const b = keypoints[j];
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      });
+    }
+
+    async function detectPose() {
+      if (video && model && ctx && isCameraActive) {
+        const poses = await model.estimatePoses(video);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (poses.length > 0) {
+          const keypoints = poses[0].keypoints;
+          drawSkeleton(keypoints, ctx);
+
+          // Gantel ko'tarishni hisoblash (prototip)
+          const leftWrist = keypoints.find(kp => kp.name === 'left_wrist');
+          const rightWrist = keypoints.find(kp => kp.name === 'right_wrist');
+
+          if (leftWrist && rightWrist && leftWrist.score > 0.3 && rightWrist.score > 0.3) {
+            // Chap qo'l
+            if (lastLeftWristY !== null && leftWrist.y < lastLeftWristY - подниманиеThreshold) {
+              chapKotarilishSoni++;
+            }
+            lastLeftWristY = leftWrist.y;
+
+            // O'ng qo'l
+            if (lastRightWristY !== null && rightWrist.y < lastRightWristY - подниманиеThreshold) {
+              ongKotarilishSoni++;
+            }
+            lastRightWristY = rightWrist.y;
+
+            gantelCounter.textContent = `O'ng: ${ongKotarilishSoni}, Chap: ${chapKotarilishSoni}`;
+          } else {
+            lastLeftWristY = null;
+            lastRightWristY = null;
+          }
+        }
+      }
+      requestAnimationFrame(detectPose);
+    }
+
+    async function enableCamera() {
+      if (!model) {
+        model = await loadModel();
+      }
+      if (!video || !canvas || !ctx) {
+        const loadedVideo = await setupCamera();
+        if (loadedVideo && model) {
+          isCameraActive = true;
+          video.style.display = 'block';
+          detectPose();
+        }
+      } else if (cameraStream && video.srcObject !== cameraStream) {
+        isCameraActive = true;
+        video.style.display = 'block';
+        video.srcObject = cameraStream;
+        detectPose();
+      } else if (video.style.display === 'none' && cameraStream) {
+        isCameraActive = true;
+        video.style.display = 'block';
+        detectPose();
+      }
+    }
+
+    function disableCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        cameraStream = null;
+        isCameraActive = false;
+        chapKotarilishSoni = 0;
+        ongKotarilishSoni = 0;
+        lastLeftWristY = null;
+        lastRightWristY = null;
+        gantelCounter.textContent = `O'ng: 0, Chap: 0`;
+        if (ctx) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        if (video) {
+          video.style.display = 'none';
+        }
+      }
+    }
+
+    // Boshlang'ichda bosh sahifani ko'rsatish
+    showSection('home');
+  </script>
+</body>
+</html>

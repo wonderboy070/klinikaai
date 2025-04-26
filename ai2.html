@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitnes Ovozli Yordamchi</title>
+  <style>
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(to right, #a8edea, #fed6e3);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    p {
+      color: #555;
+      margin-bottom: 25px;
+    }
+    .button {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      margin: 8px 0;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    .button:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(135deg, #5d0ecc 0%, #1d5aec 100%);
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #333;
+      word-wrap: break-word;
+    }
+    #menu {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 1s ease-in-out;
+    }
+    #menu button {
+      margin-top: 10px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🏋️ Fitnes Ovozli Yordamchi</h1>
+  <p>Ovozli buyruqlar orqali fitnes haqida maslahatlar oling!</p>
+  
+  <button id="pauseResumeBtn" class="button" style="display:none;">⏸️ To‘xtatish</button>
+  <button id="startVoiceBtn" class="button">🎤 Ovozli Buyruq Berish</button>
+
+  <div id="menu">
+    <button class="button" onclick="askExerciseTypes()">💪 Mashq Turlari</button>
+    <button class="button" onclick="askWeightLossDiet()">🍏 Vazn Tashlash Dietasi</button>
+    <button class="button" onclick="askMuscleGainDiet()">🥩 Mushak Massasi Dietasi</button>
+    <button class="button" onclick="askMotivationQuote()">🔥 Motivatsiya</button>
+    <button class="button" onclick="askAboutSleep()">😴 Uyqu Ahamiyati</button>
+    <button class="button" onclick="askAboutHydration()">💧 Suv Ahamiyati</button>
+    <button class="button" onclick="askAboutRest()">🧘‍♂️ Dam Olish Ahamiyati</button>
+  </div>
+
+  <div id="outputDiv" class="output" style="display:none;"></div>
+</div>
+
+<script>
+  let isListening = false;
+  let recognition;
+  const startVoiceBtn = document.getElementById('startVoiceBtn');
+  const pauseResumeBtn = document.getElementById('pauseResumeBtn');
+  const outputDiv = document.getElementById('outputDiv');
+  const menu = document.getElementById('menu');
+  let isPaused = false;
+
+  function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'uz-UZ';
+    msg.onstart = () => {
+      pauseResumeBtn.style.display = 'inline-block';
+      pauseResumeBtn.textContent = "⏸️ To‘xtatish";
+      isPaused = false;
+    };
+    msg.onend = () => {
+      pauseResumeBtn.style.display = 'none';
+    };
+    window.speechSynthesis.speak(msg);
+  }
+
+  pauseResumeBtn.addEventListener('click', () => {
+    if (window.speechSynthesis.speaking) {
+      if (!isPaused) {
+        window.speechSynthesis.pause();
+        pauseResumeBtn.textContent = "▶️ Davom ettirish";
+        isPaused = true;
+      } else {
+        window.speechSynthesis.resume();
+        pauseResumeBtn.textContent = "⏸️ To‘xtatish";
+        isPaused = false;
+      }
+    }
+  });
+
+  function showMenu() {
+    speak("Sizni qiziqtirgan sohani tanlang.");
+    menu.style.display = 'block';
+  }
+
+  function askExerciseTypes() {
+    speak("Mashqlar asosan kardio va kuch mashqlariga bo'linadi.");
+  }
+  function askWeightLossDiet() {
+    speak("Vazn tashlash uchun dieta ko'proq oqsil va kam uglevodlardan iborat bo'lishi kerak.");
+  }
+  function askMuscleGainDiet() {
+    speak("Mushak massasini oshirish uchun oqsilga boy ovqatlar iste'mol qiling.");
+  }
+  function askMotivationQuote() {
+    const quotes = [
+      "Bugungi qiyinchilik - ertangi kuchingiz.",
+      "Chegara - bu siz o'zingizga o'rnatgan to'siq.",
+      "G'alaba - bu doimiy harakat natijasidir.",
+      "Sizning yagona raqobatchingiz - kechagi o'zingiz.",
+      "Orzularingiz uchun harakat qiling."
+    ];
+    speak(quotes[Math.floor(Math.random() * quotes.length)]);
+  }
+  function askAboutSleep() {
+    speak("7-9 soat uyqu mushaklar tiklanishi uchun muhimdir.");
+  }
+  function askAboutHydration() {
+    speak("Mashqdan oldin, davomida va keyin ko'p suv iching.");
+  }
+  function askAboutRest() {
+    speak("Dam olish mushaklar o'sishi uchun zarur.");
+  }
+
+  function processVoiceCommand(command) {
+    command = command.toLowerCase();
+    if (command.includes('mashq')) askExerciseTypes();
+    else if (command.includes('vazn')) askWeightLossDiet();
+    else if (command.includes('mushak')) askMuscleGainDiet();
+    else if (command.includes('motivatsiya')) askMotivationQuote();
+    else if (command.includes('uyqu')) askAboutSleep();
+    else if (command.includes('suv')) askAboutHydration();
+    else if (command.includes('dam')) askAboutRest();
+    else {
+      speak('Kechirasiz, bu buyruqni tushunmadim.');
+    }
+  }
+
+  function startRecognition() {
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'uz-UZ';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = function(event) {
+      const command = event.results[0][0].transcript;
+      outputDiv.style.display = 'block';
+      outputDiv.textContent = `🗣️ Siz aytdingiz: ${command}`;
+      processVoiceCommand(command);
+    };
+
+    recognition.onspeechend = () => stopRecognition();
+    recognition.onerror = (event) => {
+      outputDiv.textContent = `❗ Ovozli tanib olishda xatolik: ${event.error}`;
+      stopRecognition();
+    };
+
+    recognition.start();
+    isListening = true;
+    startVoiceBtn.textContent = '🎙️ Tinglanmoqda...';
+  }
+
+  function stopRecognition() {
+    if (recognition) {
+      recognition.stop();
+      isListening = false;
+      startVoiceBtn.textContent = '🎤 Ovozli Buyruq Berish';
+    }
+  }
+
+  startVoiceBtn.addEventListener('click', () => {
+    if (!isListening) {
+      speak('Ovozli buyruq berish boshlandi. Savolingizni ayting.');
+      startRecognition();
+    } else {
+      stopRecognition();
+      speak('Ovozli buyruq berish to‘xtatildi.');
+    }
+  });
+
+  // Start menu initially
+  showMenu();
+</script>
+
+</body>
+</html>

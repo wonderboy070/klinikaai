@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitnes Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 30px;
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .sidebar-logo h2 {
+            font-weight: bold;
+            font-size: 24px;
+            color: #00ffe7;
+            margin-bottom: 5px;
+        }
+        .sidebar-logo p {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .sidebar-menu {
+            width: 100%;
+            padding: 0;
+            list-style: none;
+        }
+        .sidebar-menu li {
+            padding: 12px 25px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .sidebar-menu li:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-menu li.active {
+            background-color: #00ffe71a;
+            border-left: 5px solid #00ffe7;
+        }
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            color: #eee;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .sidebar-menu li a i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        .main {
+            flex-grow: 1;
+            margin-left: 280px;
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .health-platform-icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+        .health-platform-icons > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .health-platform-icons > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .health-platform-icons i {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #007bff; /* Asosiy rang */
+        }
+        .health-platform-icons span {
+            font-weight: bold;
+            color: #333;
+        }
+        /* Har bir yo'nalish uchun o'ziga xos ranglar (innovatsionlik uchun) */
+        .ai-trainer i { color: #28a745; } /* Yashil */
+        .ai-dietitian i { color: #ffc107; } /* Sariq */
+        .ai-psychologist i { color: #dc3545; } /* Qizil */
+        .medical-ai i { color: #17a2b8; } /* Moviy-ko'k */
+        .cybersecurity i { color: #6c757d; } /* Kulrang */
+        /* Kibirxavfsizlik ikonkasiga alohida stil */
+        .cybersecurity i {
+            font-size: 3em; /* Kibirxavfsizlik biroz kattaroq */
+            color: #3f2afc; /* To'q sariq - ogohlantirish va xavfsizlik */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Soyalar */
+        }
+        .cybersecurity span {
+            color: #0f0344;
+            font-size: 1.1em;
+            font-weight: 900; /* Yanada qalin */
+            letter-spacing: 1px; /* Harflar orasini ochish */
+        }
+        .brand-title {
+            font-size: 36px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+        .brand-title span {
+            font-size: 28px;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .digital-forensics {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background-color: #f0f4ff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .digital-forensics:hover {
+            transform: scale(1.05);
+            background-color: #e0eaff;
+        }
+        .digital-forensics i {
+            font-size: 36px;
+            color: #2553eb; /* Soft blue */
+            margin-bottom: 8px;
+            display: block;
+        }
+        .digital-forensics span {
+            font-size: 16px;
+            font-weight: 600;
+            color: #020913;
+        }
+        /* Style for the section icons */
+        .health-platform-icons div {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            width: 250px;
+        }
+        .health-platform-icons div:hover {
+            background-color: #f1f1f1;
+        }
+        .health-platform-icons i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .health-platform-icons span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        /* Style for the content sections that will appear below the icons */
+        .section-content {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .section-content h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .section-content p {
+            font-size: 16px;
+            color: #666;
+        }
+/* Kichik ekranlar uchun (telefonlar) */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        flex-direction: column; /* Sidebarni vertikal holatda qoldiramiz */
+        padding: 15px;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .sidebar-logo {
+        margin-bottom: 20px; /* Logotip ostida biroz joy qoldiramiz */
+    }
+    .sidebar-logo h2 {
+        font-size: 1.8rem;
+    }
+    .sidebar-logo p {
+        display: block; /* Logotip ostidagi yozuvni ko'rsatamiz */
+        font-size: 0.9rem;
+    }
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap; /* Elementlarni keyingi qatorga o'tkazish */
+        padding: 0;
+        margin: 0;
+        justify-content: space-around; /* Elementlar orasidagi bo'shliq */
+    }
+    .sidebar-menu li {
+        width: 48%; /* Taxminan yarim kenglik (biroz joy qoldirish uchun) */
+        padding: 10px 5px; /* Kichikroq padding */
+        margin-bottom: 5px; /* Elementlar orasidagi vertikal bo'shliq */
+        text-align: center;
+        border-left: none !important;
+    }
+    .sidebar-menu li a {
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.8rem; /* Kichikroq shrift */
+    }
+    .sidebar-menu li a i {
+        margin-right: 0;
+        margin-bottom: 3px;
+        font-size: 1rem; /* Kichikroq ikonka */
+    }
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+    .health-platform-icons {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Kichikroq ikonalar va moslashuvchan joylashuv */
+        gap: 10px;
+        padding: 10px;
+    }
+    .health-platform-icons > div {
+        padding: 10px;
+    }
+    .health-platform-icons i {
+        font-size: 2em;
+        margin-bottom: 5px;
+    }
+    .health-platform-icons span {
+        font-size: 0.9em;
+    }
+    .brand-title {
+        font-size: 2.2rem !important;
+        margin-bottom: 20px !important;
+        letter-spacing: 1px !important;
+    }
+    .brand-title span {
+        font-size: 1.8rem !important;
+    }
+    .section-content h3 {
+        font-size: 1.8rem;
+    }
+    .section-content p {
+        font-size: 1rem;
+    }
+    .digital-forensics {
+        width: 48%; /* Buni ham ikki qatorga chiqarish uchun */
+        margin-bottom: 5px;
+    }
+    .digital-forensics i {
+        font-size: 30px;
+        margin-bottom: 5px;
+    }
+    .digital-forensics span {
+        font-size: 14px;
+    }
+}
+
+        /* O'rta ekranlar uchun (planshetlar) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main {
+                margin-left: 200px;
+                padding: 20px;
+            }
+            .sidebar-logo h2 {
+                font-size: 20px;
+            }
+            .sidebar-menu li {
+                padding: 10px 20px;
+            }
+            .sidebar-menu li a {
+                font-size: 0.95rem;
+            }
+            .sidebar-menu li a i {
+                margin-right: 10px;
+                font-size: 1.1rem;
+            }
+            .health-platform-icons {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 15px;
+                padding: 15px;
+            }
+            .health-platform-icons i {
+                font-size: 2.2em;
+                margin-bottom: 8px;
+            }
+            .health-platform-icons span {
+                font-size: 1em;
+            }
+            .brand-title {
+                font-size: 2.5rem !important;
+            }
+            .brand-title span {
+                font-size: 2rem !important;
+            }
+            .section-content h3 {
+                font-size: 2rem;
+            }
+            .section-content p {
+                font-size: 1.1rem;
+            }
+            .digital-forensics {
+                width: 130px;
+            }
+            .digital-forensics i {
+                font-size: 32px;
+                margin-bottom: 6px;
+            }
+            .digital-forensics span {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2><i class="fas fa-dumbbell"></i> MedFit AI</h2>
+            <p>Sizning shaxsiy fitnes yordamchingiz</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active" onclick="showSection('home')">
+                <a href="./boshsahifa.html"><i class="fas fa-home"></i> Bosh sahifa</a>
+            </li>
+            <li onclick="showSection('workout')">
+                <a href="./5.html"><i class="fas fa-dumbbell"></i> Mashq Rejasi</a>
+            </li>
+            <li onclick="showSection('meal')">
+                <a href="./6.html"><i class="fas fa-utensils"></i> Ovqatlanish Rejasi</a>
+            </li>
+            <li onclick="showSection('ai')">
+                <a href="./999.html"><i class="fas fa-brain"></i> AI sport</a>
+            </li> <li onclick="showSection('ai')">
+                <a href="./newchataibot.html"><i class="fas fa-microphone"></i> Ovozli chatbot</a>
+            </li>
+            <li onclick="showSection('bmi')">
+                <a href="./7.html"><i class="fas fa-weight"></i> Vazn va BMI Nazorati</a>
+            </li>
+            <li onclick="showSection('stats')">
+                <a href="./9.html"><i class="fas fa-chart-line"></i> Haftalik vazifalar</a>
+            </li>
+            <li onclick="showSection('profile')">
+                <a href="./ned.html"><i class="fas fa-user-circle"></i> Shaxsiy Kabinet</a>
+            </li>
+
+            <li onclick="showSection('medfitai')">
+                <a href="./chatbot.html"><i class="fas fa-robot"></i> 🤖 MedFit AI</a>
+            </li><li onclick="showSection('settings')">
+                <a href="./sozlamalar.html"><i class="fas fa-cog"></i> Sozlamalar</a>
+            </li>
+            <li onclick="showSection('login')">
+                <a href="./login.html"><i class="fas fa-sign-in-alt"></i> Kirish / Ro‘yxat</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div id="home" class="section active">
+            <div class="overlay-panel overlay-right">
+                <h2 class="brand-title" style="font-size: 2.9em;">MedFit <span>AI</span></h2>
+                <div class="health-platform-icons">
+                    <div class="ai-trainer" onclick="toggleSection('fitness')">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>AI Fitness Trener</span>
+                    </div>
+                    <div class="ai-dietitian" onclick="toggleSection('diet')">
+                        <i class="fas fa-utensils"></i>
+                        <span>AI Dietolog</span>
+                    </div>
+                    <div class="ai-psychologist" onclick="toggleSection('psychology')">
+                        <i class="fas fa-brain"></i>
+                        <span>Psixolog AI</span>
+                    </div>
+                    <div class="medical-ai" onclick="toggleSection('medical')">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Tibbiy AI</span>
+                    </div>
+                    <div class="cybersecurity" onclick="toggleSection('cyber')">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Kiberxavfsizlik</span>
+                    </div>
+                    <div class="digital-forensics" onclick="toggleSection('forensics')">
+                        <i class="fas fa-fingerprint"></i>
+                        <span>Raqamli Kriminalistika</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-content" id="fitness-content" style="display:none;">
+                <h3>AI Fitness Trener</h3>
+                <p>AI yordamida shaxsiy trening rejalaringizni yaratish. Har bir mashqni to‘g‘ri bajarish bo‘yicha maxsus video va tavsiyalar. O‘zgarishlarni real vaqt rejimida kuzatish va mashg‘ulotlarni optimallashtirish.</p>
+                <ul>
+                    <li>Shaxsiy mashqlar rejalari</li>
+                    <li>AI yordamida shaklni to‘g‘rilash</li>
+                    <li>Treninglar va takliflar real vaqt rejimida yangilanadi</li>
+                    <li>Yuqori samarali mashqlar</li>
+                    <li>Jismoniy holatni va o‘sishni kuzatish</li>
+                </ul></div>
+            <div class="section-content" id="diet-content" style="display:none;">
+                <h3>AI Dietolog</h3>
+                <p>Sog‘lom ovqatlanish bo‘yicha AI yordamida dietalar va tavsiyalar oling. Kaloriya va ozuqaviy moddalar iste'molini kuzatib borish va sog‘lom ovqatlanish rejalari yaratish.</p>
+                <ul>
+                    <li>Shaxsiy dietalar va ovqatlanish rejalarini yaratish</li>
+                    <li>Ozuqaviy moddalar va kaloriya iste'molini kuzatish</li>
+                    <li>Yuqori samarali ovqatlanish tavsiyalari</li>
+                    <li>Yuqori sifatli mahsulotlar va ular bilan bog‘liq maslahatlar</li>
+                    <li>AI tomonidan optimallashtirilgan ovqatlanish strategiyalari</li>
+                </ul> </div>
+            <div class="section-content" id="psychology-content" style="display:none;">
+                <h3>Psixolog AI</h3>
+                <p>Ruhiy salomatlikni yaxshilash uchun AI yordamida tavsiyalar va maslahatlar. Stressni kamaytirish, kayfiyatni yaxshilash va ruhiy barqarorlikni ta'minlash uchun innovatsion yondashuvlar.</p>
+                <ul>
+                    <li>Shaxsiy ruhiy holatni baholash</li>
+                    <li>Stressni boshqarish va kayfiyatni yaxshilash</li>
+                    <li>AI yordamida ruhiy salomatlikni kuzatish</li>
+                    <li>Psixologik maslahatlar va yordam</li>
+                    <li>Ruhiy tahlil va tahlil asosida tavsiyalar</li>
+                </ul></div>
+            <div class="section-content" id="medical-content" style="display:none;">
+                <h3>Tibbiy AI</h3>
+                <p>AI yordamida tibbiy maslahatlar, diagnostika va sog‘liqni monitoring qilish. Foydalanuvchi shaxsining xavfsizligini ta'minlash uchun maxsus texnologiyalar. Bu tizimda faqat skelet ko‘rinadi, insonni xavfsizligi yuqori darajada ta'minlanadi.</p>
+                <ul>
+                    <li>Shaxsiy tibbiy diagnostika va maslahatlar</li>
+                    <li>Sog‘liqni monitoring qilish va xavfsizligini ta'minlash</li>
+                    <li>Tibbiy tahlil va diagnostika vositalari</li>
+                    <li>AI yordamida shaxsiy sog‘liqni kuzatish</li>
+                    <li>Skeletni aniqlash va xavfsizlikni ta'minlash texnologiyasi</li>
+                </ul></div>
+            <div class="section-content" id="cyber-content" style="display:none;">
+                <h3>Kiberxavfsizlik</h3>
+                <p>Ma’lumotlaringizni himoya qilish uchun AI yordamida kiberxavfsizlik vositalari. Raqamli hujumlarga qarshi himoya va xavfsizlikni ta'minlash, maxfiy ma'lumotlar va shaxsiy ma'lumotlarni saqlashni optimallashtirish.</p>
+                <ul>
+                    <li>Real vaqt davomida foydalanuvchi shaxsning xavfsizlik monitoringi</li>
+                    <li>Kiberxavfsizlik yordamida MedFit AI ni boshqarish</li>
+                    <li>Platformaga kirish vaqtida kuchli paroldan foydalanish</li>
+                    <li>Xavfsizlikni tahlil qilish va oldini olish</li>
+                    <li>Raqamli hujumlarga qarshi himoya vositalari</li>
+                </ul></div>
+            <div class="section-content" id="forensics-content" style="display:none;">
+                <h3>Raqamli Kriminalistika</h3>
+                <p>MedFit AI platformasida raqamli ma'lumotlarning xavfsizligi va yaxlitligini ta'minlash uchun AI yondashuvlari va vositalari. Foydalanuvchi ma'lumotlari, sog'liq ko'rsatkichlari va platforma faoliyatini tahlil qilish orqali potentsial xavflarni aniqlash va bartaraf etish.</p>
+                <ul>
+                    <li>MedFit AI foydalanuvchi ma'lumotlarining xavfsizligini ta'minlash</li>
+                    <li>AI yordamida sog'liq ko'rsatkichlari va platforma faoliyatidagi anomaliyalarni aniqlash</li>
+                    <li>Kiberxavfsizlik tahdidlarini oldini olish va bartaraf etish uchun ilg'or texnologiyalarni qo'llash</li>
+                    <li>Foydalanuvchi faoliyati va ma'lumotlar oqimini qayd qilish va tahlil qilish</li>
+                    <li>Shaxsiy ma'lumotlarni himoya qilish va maxfiylikni ta'minlash vositalari</li>
+                    <li>Potentsial suiiste'mollik yoki soxta ma'lumotlarni aniqlash</li>
+                </ul></div>
+        </div>
+        <div id="workout" class="section">
+            <h2>Mashq Rejasi</h2>
+            <p>Mashq rejasi bo'limi kontenti.</p>
+        </div>
+        <div id="meal" class="section">
+            <h2>Ovqatlanish Rejasi</h2>
+            <p>Ovqatlanish rejasi bo'limi kontenti.</p>
+        </div>
+        <div id="ai" class="section">
+            <h2>AI Tahlil</h2>
+            <p>AI tahlil bo'limi kontenti.</p>
+        </div>
+        <div id="bmi" class="section">
+            <h2>Vazn va BMI Nazorati</h2>
+            <p>Vazn va BMI nazorati bo'limi kontenti.</p>
+        </div>
+        <div id="stats" class="section">
+            <h2>Haftalik vazifalar</h2>
+            <p>Statistikalar:</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Haftalik Statistika</h4>
+                    <ul>
+                        <li><strong>O'rtacha vazn: </strong>75 kg</li>
+                        <li><strong>O'rtacha BMI: </strong>24.5</li>
+                        <li><strong>Mashqlar: </strong>5</li>
+                        <li><strong>O'rtacha mashq vaqti: </strong>45 min</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4>Oylik Statistika</h4>
+                    <ul>
+                        <li><strong>O'rtacha vazn: </strong>74 kg</li>
+                        <li><strong>O'rtacha BMI: </strong>24.2</li>
+                        <li><strong>O'rtacha mashq vaqti: </strong>48 min</li>
+                        <li><strong>O'rtacha kaloriyalar: </strong>350 kcal</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+        <div id="profile" class="section">
+            <h2>Shaxsiy Kabinet</h2>
+            <p>Shaxsiy kabinet bo'limi kontenti.</p>
+        </div>
+        <div id="settings" class="section">
+            <h2>Sozlamalar</h2>
+            <p>Sozlamalar bo'limi kontenti.</p>
+        </div>
+        <div id="login" class="section">
+            <h2>Kirish / Ro‘yxat</h2>
+            <p>Kirish va ro'yxatdan o'tish bo'limi kontenti.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const sections = document.querySelectorAll('.section');
+        const menuItems = document.querySelectorAll('.sidebar-menu li');
+
+        function showSection(id) {
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+
+            menuItems.forEach(item => item.classList.remove('active'));
+            const activeMenuItem = Array.from(menuItems).find(li => li.getAttribute('onclick') === `showSection('${id}')`);
+            if (activeMenuItem) {
+                activeMenuItem.classList.add('active');
+            }
+        }
+
+        // Boshlang'ichda bosh sahifani ko'rsatish
+        showSection('home');
+
+        function toggleSection(section) {
+            // Hide all sections first
+            const sectionsContent = document.querySelectorAll('.section-content');
+            sectionsContent.forEach(function(sectionContent) {
+                sectionContent.style.display = 'none';
+            });
+
+            // Show the clicked section
+            const content = document.getElementById(`${section}-content`);
+            if (content) {
+                content.style.display = 'block';
+            }
+        }
+
+        // Chart.js orqali o'sish va tushish grafikasi (egri chiziqlar)
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1 hafta', '2 hafta', '3 hafta', '4 hafta'],
+                datasets: [{
+                    label: 'Mashq Vaqti (daqiqa)',
+                    data: [40, 50, 45, 60],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4   // Egri chiziqlar uchun
+                }]
+            }
+        });
+    </script>
+
+</body>
+</html>

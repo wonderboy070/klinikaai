@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitnes Ovozli Yordamchi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        #menu {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        #menu button {
+            background-color: #28a745;
+        }
+        #menu button:hover {
+            background-color: #1e7e34;
+        }
+        .output {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #495057;
+            text-align: left;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fitnes Ovozli Yordamchi</h1>
+        <p>Ovozli buyruqlar orqali fitnes masalalari bo'yicha yordam oling!</p>
+        <button id="startVoiceBtn" class="button">Ovozli Buyruq Berish</button>
+        <div id="menu" style="display:none;">
+            <button class="button" onclick="askExerciseTypes()">Mashq Turlari</button>
+            <button class="button" onclick="askWeightLossDiet()">Vazn Tashlash Dietasi</button>
+            <button class="button" onclick="askMuscleGainDiet()">Mushak Massasi Oshirish Dietasi</button>
+            <button class="button" onclick="askMotivationQuote()">Motivatsiya</button>
+            <button class="button" onclick="askAboutSleep()">Uyqu Ahamiyati</button>
+            <button class="button" onclick="askAboutHydration()">Suv Ahamiyati</button>
+            <button class="button" onclick="askAboutRest()">Dam Olish Ahamiyati</button>
+        </div>
+        <button id="stopBtn" class="button" style="display:none;">To'xtatish</button>
+        <div id="outputDiv" class="output" style="display:none;"></div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let recognition;
+        const startVoiceBtn = document.getElementById('startVoiceBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const outputDiv = document.getElementById('outputDiv');
+        const menu = document.getElementById('menu');
+
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'uz-UZ';
+            window.speechSynthesis.speak(msg);
+            outputDiv.style.display = 'block';
+            outputDiv.textContent = `Yordamchi: ${text}`;
+        }
+
+        function showMenu() {
+            speak("Sizni qiziqtirgan sohani tanlang.");
+            menu.style.display = 'grid';
+        }
+
+        function askExerciseTypes() {
+            speak("Mashqlar asosan ikki turga bo'linadi: kardio va kuch mashqlari. Kardio yurak-qon tomir tizimini yaxshilaydi, kuch mashqlari esa mushaklarni mustahkamlaydi.");
+        }
+
+        function askWeightLossDiet() {
+            speak("Vazn tashlash uchun dieta ko'proq oqsil, kamroq uglevod va sog'lom yog'larni o'z ichiga olishi kerak. Shuningdek, qayta ishlangan mahsulotlar va shakarli ichimliklardan voz kechish lozim.");
+        }
+
+        function askMuscleGainDiet() {
+            speak("Mushak massasini oshirish uchun dieta oqsilga boy bo'lishi kerak. Har bir kilogramm tana vazniga kamida 1.6-2.2 gramm oqsil iste'mol qilish tavsiya etiladi.");
+        }
+
+        function askMotivationQuote() {
+            const quotes = [
+                "Bugungi qiyinchilik - ertangi kuchingiz.",
+                "Chegara - bu siz o'zingizga o'rnatgan to'siq.",
+                "G'alaba - bu doimiy harakat natijasidir.",
+                "Sizning yagona raqobatchingiz - bu kechagi o'zingiz.",
+                "Orzularingizga erishish uchun harakat qiling."
+            ];
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            speak(randomQuote);
+        }
+
+        function askAboutSleep() {
+            speak("Yetarli uyqu fitnesdagi muvaffaqiyat uchun juda muhim. Uyqu mushaklarning tiklanishiga yordam beradi, energiyani oshiradi va gormonal balansni saqlaydi. Kattalar uchun 7-9 soat uyqu tavsiya etiladi.");
+        }
+
+        function askAboutHydration() {
+            speak("Suv tananing barcha funktsiyalari uchun zarur. Mashq qilishdan oldin, davomida va keyin etarli miqdorda suv ichish muhim. Suvsizlanish energiya darajasini pasaytiradi va mashq samaradorligini kamaytiradi.");
+        }
+
+        function askAboutRest() {
+            speak("Dam olish mushaklarning tiklanishi va o'sishi uchun zarur. Haddan tashqari mashq qilish jarohatlarga olib kelishi mumkin. Haftada kamida bir yoki ikki kun faol dam olish yoki to'liq dam olish tavsiya etiladi.");
+        }
+
+        function processVoiceCommand(command) {
+            if (command.includes('mashq turlari')) {
+                askExerciseTypes();
+            } else if (command.includes('vazn tashlash dieta')) {
+                askWeightLossDiet();
+            } else if (command.includes('mushak massasi dieta')) {
+                askMuscleGainDiet();
+            } else if (command.includes('motivatsion iqtibos') || command.includes('motivatsiya')) {
+                askMotivationQuote();
+            } else if (command.includes('uyqu ahamiyati')) {
+                askAboutSleep();
+            } else if (command.includes('suv ahamiyati')) {
+                askAboutHydration();
+            } else if (command.includes('dam olish ahamiyati')) {
+                askAboutRest();
+            } else if (command.includes('to\'xta')) {
+                stopRecognition();
+            } else {
+                speak('Men bu buyruqni tushunmadim. Iltimos, menyudan tanlang yoki qaytadan urinib ko\'ring.');
+            }
+        }
+
+        function startRecognition() {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'uz-UZ';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.toLowerCase();
+                outputDiv.style.display = 'block';
+                outputDiv.textContent = `Siz aytdingiz: ${command}`;
+                processVoiceCommand(command);
+            };
+
+            recognition.onspeechend = function() {
+                stopRecognition();
+            };
+
+            recognition.onerror = function(event) {
+                outputDiv.textContent = `Ovozli tanib olishda xatolik: ${event.error}`;
+                stopRecognition();
+            };
+
+            recognition.start();
+            isListening = true;
+            startVoiceBtn.textContent = 'Tinglash...';
+            stopBtn.style.display = 'inline-block';
+            menu.style.display = 'none';
+        }
+
+        function stopRecognition() {
+            if (recognition) {
+                recognition.stop();
+                isListening = false;
+                startVoiceBtn.textContent = 'Ovozli Buyruq Berish';
+                stopBtn.style.display = 'none';
+                showMenu();
+            }
+        }
+
+        startVoiceBtn.addEventListener('click', function() {
+            if (!isListening) {
+                speak('Ovozli buyruq berish rejimi ishga tushdi. Savolingizni ayting.');
+                startRecognition();
+            } else {
+                stopRecognition();
+                speak('Ovozli buyruq berish rejimi to\'xtatildi.');
+            }
+        });
+
+        stopBtn.addEventListener('click', stopRecognition);
+
+        // Menu start
+        showMenu();
+    </script>
+</body>
+</html>

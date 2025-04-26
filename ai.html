@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kengaytirilgan Menyuli Fitnes Yordamchi</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .menu-buttons button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .menu-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: left;
+            width: 100%;
+        }
+        .voice-control {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+        .voice-control button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .voice-control button:hover {
+            background-color: #4cae4c;
+        }
+        .control-buttons {
+            margin-top: 20px;
+            display: none;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+        .control-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .control-buttons button#stopBtn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+        }
+        .control-buttons button#stopBtn:hover {
+            background-color: #c9302c;
+        }
+        .control-buttons button#resumeBtn {
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+        }
+        .control-buttons button#resumeBtn:hover {
+            background-color: #eea236;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kengaytirilgan Menyuli Fitnes Yordamchi</h1>
+        <div class="menu-buttons">
+            <button onclick="askExerciseTypes()">Mashq turlari haqida</button>
+            <button onclick="askCardioExercises()">Kardio mashqlari</button>
+            <button onclick="askStrengthExercises()">Kuch mashqlari</button>
+            <button onclick="askWeightLossDiet()">Vazn tashlash uchun dieta</button>
+            <button onclick="askMuscleGainDiet()">Mushak massasi uchun dieta</button>
+            <button onclick="askTrackWeight()">Vaznimni qanday kuzatay?</button>
+            <button onclick="askTrackMeasurements()">O'lchamlarimni qanday kuzatay?</button>
+            <button onclick="askMotivationQuote()">Motivatsion iqtibos</button>
+            <button onclick="askMotivationTips()">Motivatsiya uchun maslahatlar</button>
+            <button onclick="askAboutSleep()">Uyquning ahamiyati</button>
+            <button onclick="askAboutHydration()">Suvning ahamiyati</button>
+            <button onclick="askAboutRest()">Dam olishning ahamiyati</button>
+        </div>
+        <div class="voice-control">
+            <button id="startVoiceBtn">Ovozli Buyruq Berish</button>
+        </div>
+        <div id="output" class="output" style="display: none;"></div>
+        <div class="control-buttons" id="audioControls">
+            <button id="stopBtn">To'xtatish</button>
+            <button id="resumeBtn">Davom Ettirish</button>
+        </div>
+    </div>
+
+    <script>
+        const outputDiv = document.getElementById('output');
+        const startVoiceBtn = document.getElementById('startVoiceBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const audioControlsDiv = document.getElementById('audioControls');
+        let currentUtterance = null;
+        let recognition;
+        let isListening = false;
+
+        function speak(text) {
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.lang = 'uz-UZ';
+            window.speechSynthesis.speak(currentUtterance);
+            outputDiv.style.display = 'block';
+            outputDiv.textContent = `Yordamchi: ${text}`;
+            audioControlsDiv.style.display = 'flex';
+        }
+
+        function askExerciseTypes() {
+            speak("Mashqlar asosan ikki turga bo'linadi: kardio va kuch mashqlari. Kardio yurak-qon tomir tizimini yaxshilaydi, kuch mashqlari esa mushaklarni mustahkamlaydi.");
+        }
+
+        function askCardioExercises() {
+            speak("Kardio mashqlariga yugurish, suzish, velosiped haydash, tez yurish va aerobika kiradi. Ular chidamlilikni oshiradi va kaloriyalarni yoqadi.");
+        }
+
+        function askStrengthExercises() {
+            speak("Kuch mashqlariga og'irlik ko'tarish, turnikda tortilish, qo'l bilan tayanib ko'tarilish, o'tirib turish va plank kabi tana vazni bilan bajariladigan mashqlar kiradi. Ular mushak massasini oshiradi va kuch beradi.");
+        }
+
+        function askWeightLossDiet() {
+            speak("Vazn tashlash uchun dieta ko'proq oqsil, kamroq uglevod va sog'lom yog'larni o'z ichiga olishi kerak. Shuningdek, qayta ishlangan mahsulotlar va shakarli ichimliklardan voz kechish lozim.");
+        }
+
+        function askMuscleGainDiet() {
+            speak("Mushak massasini oshirish uchun dieta oqsilga boy bo'lishi kerak. Har bir kilogramm tana vazniga kamida 1.6-2.2 gramm oqsil iste'mol qilish tavsiya etiladi. Shuningdek, murakkab uglevodlar va sog'lom yog'lar ham muhim.");
+        }
+
+        function askTrackWeight() {
+            speak("Vazningizni kuzatish uchun muntazam ravishda bir xil vaqtda (masalan, ertalab och qoringa) taroziga turing va natijalarni kundalikka yoki maxsus ilovaga yozib boring.");
+        }
+
+        function askTrackMeasurements() {
+            speak("Tana o'lchamlarini kuzatish uchun o'lchov lentasidan foydalaning va bel, son, ko'krak va qo'l kabi joylarning o'lchamlarini har ikki haftada bir marta qayd etib boring.");
+        }
+
+        function askMotivationQuote() {
+            const quotes = [
+                "Bugungi qiyinchilik - ertangi kuchingiz.",
+                "Chegara - bu siz o'zingizga o'rnatgan to'siq.",
+                "G'alaba - bu doimiy harakat natijasidir.",
+                "Sizning yagona raqobatchingiz - bu kechagi o'zingiz.",
+                "Orzularingizga erishish uchun harakat qiling."
+            ];
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            speak(randomQuote);
+        }
+
+        function askMotivationTips() {
+            speak("Maqsadlaringizni aniq belgilang, kichik qadamlardan boshlang, o'zingizni mukofotlang, qo'llab-quvvatlovchi do'stlar va hamfikrlar toping va hech qachon taslim bo'lmang.");
+        }
+
+        function askAboutSleep() {
+            speak("Yetarli uyqu fitnesdagi muvaffaqiyat uchun juda muhim. Uyqu mushaklarning tiklanishiga yordam beradi, energiyani oshiradi va gormonal balansni saqlaydi. Kattalar uchun 7-9 soat uyqu tavsiya etiladi.");
+        }
+
+        function askAboutHydration() {
+            speak("Suv tananing barcha funktsiyalari uchun zarur. Mashq qilishdan oldin, davomida va keyin etarli miqdorda suv ichish muhim. Suvsizlanish energiya darajasini pasaytiradi va mashq samaradorligini kamaytiradi.");
+        }
+
+        function askAboutRest() {
+            speak("Dam olish mushaklarning tiklanishi va o'sishi uchun zarur. Haddan tashqari mashq qilish jarohatlarga olib kelishi mumkin. Haftada kamida bir yoki ikki kun faol dam olish yoki to'liq dam olish tavsiya etiladi.");
+        }
+
+        function startRecognition() {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'uz-UZ';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.toLowerCase();
+                outputDiv.style.display = 'block';
+                outputDiv.textContent = `Siz aytdingiz: ${command}`;
+                processVoiceCommand(command);
+            };
+
+            recognition.onspeechend = function() {
+                stopRecognition();
+            };
+
+            recognition.onerror = function(event) {
+                outputDiv.textContent = `Ovozli tanib olishda xatolik: ${event.error}`;
+                stopRecognition();
+            };
+
+            recognition.start();
+            isListening = true;
+            startVoiceBtn.textContent = 'Tinglash...';
+        }
+
+        function stopRecognition() {
+            if (recognition) {
+                recognition.stop();
+                isListening = false;
+                startVoiceBtn.textContent = 'Ovozli Buyruq Berish';
+            }
+        }
+
+        function processVoiceCommand(command) {
+            if (command.includes('mashq turlari')) askExerciseTypes();
+            else if (command.includes('kardio mashq')) askCardioExercises();
+            else if (command.includes('kuch mashq')) askStrengthExercises();
+            else if (command.includes('vazn tashlash dieta')) askWeightLossDiet();
+            else if (command.includes('mushak massasi dieta')) askMuscleGainDiet();
+            else if (command.includes('vaznimni qanday kuzat')) askTrackWeight();
+            else if (command.includes('o\'lchamlarimni qanday kuzat')) askTrackMeasurements();
+            else if (command.includes('motivatsion iqtibos')) askMotivationQuote();
+            else if (command.includes('motivatsiya uchun maslahat')) askMotivationTips();
+            else if (command.includes('uyqu ahamiyati')) askAboutSleep();
+            else if (command.includes('suv ahamiyati')) askAboutHydration();
+            else if (command.includes('dam olish ahamiyati')) askAboutRest();
+            else if (command.includes('rahmat')) speak('Marhamat!');
+            else if (command.includes('to\'xta')) {
+                speak('Ovozli yordamchi to\'xtatildi.');
+                stopRecognition();
+                audioControlsDiv.style.display = 'none';
+            } else {
+                speak('Men bu buyruqni tushunmadim. Iltimos, menyudan tanlang yoki qaytadan urinib ko\'ring.');
+            }
+        }
+
+        startVoiceBtn.addEventListener('click', function() {
+            if (!isListening) {
+                speak('Ovozli buyruq berish rejimi ishga tushdi. Savolingizni ayting.');
+                startRecognition();
+            } else {
+                stopRecognition();
+                speak('Ovozli buyruq berish rejimi to\'xtatildi.');
+                audioControlsDiv.style.display = 'none';
+            }
+        });
+
+        stopBtn.addEventListener('click', function() {
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.pause();
+                stopBtn.textContent = "To'xtatildi";
+                resumeBtn.style.display = "inline-block";
+            }
+        });
+
+        resumeBtn.addEventListener('click', function() {
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+                resumeBtn.style.display = "none";
+                stopBtn.textContent = "To'xtatish";
+            }
+        });
+    </script>
+</body>
+</html>

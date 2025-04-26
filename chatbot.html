@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedFit AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .chat-box {
+            margin-top: 30px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Agar javoblar ko'p bo'lsa, aylantirish paydo bo'ladi */
+        }
+        .question {
+            background-color: #e8f4fd;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            align-self: flex-start;
+            max-width: 80%;
+            word-break: break-word;
+        }
+        .response {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            align-self: flex-end;
+            max-width: 80%;
+            word-break: break-word;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>🤖 MedFit AI</h1>
+        <div id="main-menu" class="menu">
+            <button onclick="showGenderMenu('exercise')">🏋️ Mashqlar</button>
+            <button onclick="showGenderMenu('nutrition')">🍽 Ovqatlanish</button>
+            <button onclick="showGenderMenu('progress')">📊 Progress</button>
+            <button onclick="showSubMenu('other')">❓ Boshqa savollar</button>
+        </div>
+
+        <div id="gender-menu" class="menu" style="display:none"></div>
+        <div id="submenu" class="menu" style="display:none"></div>
+
+        <div class="chat-box" id="chat-box"></div>
+        <button class="back-btn" id="backBtn" style="display:none" onclick="goBack()">⬅️ Ortga</button>
+    </div>
+
+    <script>
+        const responses = {
+    exercise: {
+        erkak: {
+            'Erkaklar uchun muskul o‘stiruvchi mashqlar?': 'Deadlift, bench press, squat va pull-up mashqlari mushak o‘stirish uchun samarali.',
+            'Erkaklar uchun press chiqarish mashqlari?': 'Crunch, leg raise, plank va mountain climber mashqlari samarali.',
+            'Erkaklar uchun kardio mashqlari bormi?': 'Yugurish, suzish, velosiped va yuqori intensivlikdagi interval mashqlari (HIIT) foydali.',
+            'Erkaklar uchun elkama mashqlari?': 'Military press, lateral raise va front raise elkama mushaklarini rivojlantiradi.',
+            'Erkaklar uchun maksimal yuk ko‘tarish mashqlari?': 'Deadlift, squat va bench press maksimal yuk ko‘tarish uchun samarali mashqlar.',
+            'Erkaklar uchun tezlikni oshirish mashqlari?': 'Sprint, plyometrics va interval mashqlar tezlikni oshirishga yordam beradi.',
+        },
+        ayol: {
+            'Ayollar uchun uy sharoitida mashqlar?': 'Squat, lunges, glute bridge va bird-dog mashqlari ayollar uchun mos.',
+            'Ayollar uchun belni ingichkalashtiruvchi mashqlar?': 'Side plank, twisting crunch va jump rope tavsiya qilinadi.',
+            'Ayollar uchun qorin mushaklari mashqlari?': 'Plank, bicycle crunch va reverse crunch samarali.',
+            'Ayollar uchun qo‘l mushaklari mashqlari?': 'Push-up (tizzada turib bajarish mumkin), dumbbell curl va triceps extension.',
+            'Ayollar uchun maksimal kuch mashqlari?': 'Deadlift, kettlebell swing va overhead press mashqlari maksimal kuchni oshiradi.',
+            'Ayollar uchun yuk tashish mashqlari?': 'Farmers walk, deadlift va kettlebell carry yukni ko‘tarishga yordam beradi.',
+        }
+    },
+    nutrition: {
+        erkak: {
+            'Erkaklar uchun mushak uchun ovqatlanish?': 'Protein, murakkab uglevodlar, sabzavotlar va ko‘p suv iste’mol qilish kerak.',
+            'Erkaklar uchun vazn oshirish uchun nima yeyish kerak?': 'Kaloriyaga boy, sog‘lom yog‘lar, yong‘oqlar, guruch, go‘sht.',
+            'Erkaklar uchun energiya beruvchi mahsulotlar?': 'Banallar, oatmeal, yong‘oqlar va to‘liq donli mahsulotlar.',
+            'Erkaklar uchun oqsilli kokteyllar qanday tayyorlanadi?': 'Zardob oqsili, sut yoki suv, mevalar va yong‘oq yog‘i bilan blenderda aralashtiring.',
+            'Erkaklar uchun sport oldidan ovqatlanish qanday bo‘lishi kerak?': 'Yengil, murakkab uglevodlar va proteinli ovqatlar 1-2 soat oldin iste’mol qiling.',
+            'Erkaklar uchun tiklanish uchun qanday ovqatlar kerak?': 'Oqsilga boy, to‘g‘ri yog‘lar va ko‘p miqdorda uglevodlar tanaviy tiklanish uchun foydalidir.',
+        },
+        ayol: {
+            'Ayollar uchun vazn yo‘qotish ovqatlari?': 'Sabzavotlar, qaynatilgan tovuq, tuxum, grechka va ko‘p suv.',
+            'Ayollar uchun teri va soch uchun foydali ovqatlar?': 'Avokado, losos baliq, yong‘oqlar va mevalar.',
+            'Ayollar uchun ertalabki nonushta nima bo‘lishi kerak?': 'Yogurt mevalar bilan, tvorog yoki tuxumli nonushta.',
+            'Ayollar uchun shirinlik o‘rniga nima iste’mol qilish mumkin?': 'Mevalar, quritilgan mevalar, asal yoki oz miqdordagi qora shokolad.',
+            'Ayollar uchun mashq oldidan ovqatlanish qanday bo‘lishi kerak?': 'Yengil uglevod va proteinli ovqatlar, masalan, banan va yogurt.',
+            'Ayollar uchun tiklanish ovqatlanishi qanday bo‘lishi kerak?': 'Oqsilga boy ovqatlar, masalan, tovuq go‘shti, baliq va yong‘oqlar.',
+        }
+    },
+    progress: {
+        erkak: {
+            'Erkaklar progressni qanday o‘lchaydi?': 'Og‘irlik, mushak o‘lchami, suratlar, mashq natijalari orqali.',
+            'Qanday qilib mushak o‘sishini tezlashtirish mumkin?': 'Yaxshi ovqatlanish, dam olish, og‘ir mashqlar va protein iste’moli.',
+            'Progressni qancha vaqtda ko‘rish mumkin?': 'Muntazam mashq va ovqatlanish bilan bir necha hafta ichida sezilarli o‘zgarishlar bo‘lishi mumkin.',
+            'Agar progress bo‘lmasa nima qilish kerak?': 'Mashq dasturini, ovqatlanishni qayta ko‘rib chiqing va dam olishga e’tibor bering.',
+            'Erkaklar uchun mushaklar o‘sishini qanday qo‘llab-quvvatlash mumkin?': 'Yaxshi uyqu, oqsilli dietalar va og‘ir mashqlar muhimdir.',
+            'Erkaklar uchun jismoniy kuchni qanday oshirish mumkin?': 'Kuchli mashqlar va yuksaltirilgan kaloriyali dietalar yordamida. ',
+        },
+        ayol: {
+            'Ayollar progressini qanday kuzatadi?': 'Bel, son o‘lchovi, suratlar, mashq davomiyligi orqali.',
+            'Qanday qilib ayollar mashqda natija ko‘radi?': 'Doimiylik, ovqatlanish nazorati va motivatsiya orqali.',
+            'Vazn yo‘qotish qancha vaqt olishi mumkin?': 'Sog‘lom vazn yo‘qotish haftasiga 0.5-1 kg ni tashkil qiladi.',
+            'Agar vazn yo‘qotish sekin bo‘lsa nima qilish kerak?': 'Kaloriya iste’molini kamaytiring, jismoniy faollikni oshiring va sabrli bo‘ling.',
+            'Ayollar uchun kuchni oshirish usullari qanday?': 'Og‘ir mashqlar, proteinli ovqatlar va to‘g‘ri tiklanish bilan. ',
+            'Ayollar uchun mushak o‘sishini qanday oshirish mumkin?': 'Yuqori intensivlikdagi mashqlar va oz miqdordagi yuqori kaloriyali ovqatlar bilan.',
+        }
+    },
+    other: {
+        'Mashq vaqtida og‘riq bo‘lsa nima qilish kerak?': 'Agar kuchli og‘riq bo‘lsa – mashqni to‘xtating va shifokor bilan maslahatlashing.',
+        'Motivatsiyani qanday saqlash mumkin?': 'Maqsad yozing, kundalik yuriting, progress suratini saqlang.',
+        'Uyqu va fitnes aloqasi bormi?': 'Ha! Sifatli uyqu tiklanish va mushak o‘sishi uchun muhim. Kuniga 7-8 soat uxlang.',
+        'Suvning fitnesdagi roli qanday?': 'Suv energiya beradi, tana haroratini tartibga soladi va mushaklarning ishlashiga yordam beradi.',
+        'Stress fitnesga qanday ta’sir qiladi?': 'Yuqori stress darajasi mashq natijalarini yomonlashtirishi va tiklanishni sekinlashtirishi mumkin.',
+        'Fitnes uchun eng yaxshi uyqu rejimi qanday?': 'Kuniga 7-8 soat sifatli uyqu, tinch va sokin muhitda uxlash eng yaxshisidir.',
+    }
+};
+
+
+        let currentCategory = '';
+
+        function showGenderMenu(category) {
+            currentCategory = category;
+            const genderMenu = document.getElementById('gender-menu');
+            const mainMenu = document.getElementById('main-menu');
+            const submenu = document.getElementById('submenu');
+
+            genderMenu.innerHTML = `
+                <button onclick="showSubMenu('${category}', 'erkak')">🧔 Erkaklar</button>
+                <button onclick="showSubMenu('${category}', 'ayol')">👩 Ayollar</button>
+            `;
+
+            mainMenu.style.display = 'none';
+            genderMenu.style.display = 'grid';
+            submenu.style.display = 'none';
+            document.getElementById('chat-box').innerHTML = '';
+            document.getElementById('backBtn').style.display = 'block';
+        }
+
+        function showSubMenu(category, gender = null) {
+            const submenu = document.getElementById('submenu');
+            const genderMenu = document.getElementById('gender-menu');
+            submenu.innerHTML = '';
+
+            let questions = gender ? responses[category][gender] : responses[category];
+
+            Object.keys(questions).forEach((question) => {
+                const btn = document.createElement('button');
+                btn.textContent = question;
+                btn.onclick = () => showAnswer(question, questions[question]); // Savolni ham uzatamiz
+                submenu.appendChild(btn);
+            });
+
+            genderMenu.style.display = 'none';
+            submenu.style.display = 'grid';
+            document.getElementById('chat-box').innerHTML = '';
+            if (gender) {
+                const otherQuestionsBtn = document.createElement('button');
+                otherQuestionsBtn.textContent = '❓ Boshqa savollar';
+                otherQuestionsBtn.onclick = () => showSubMenu('other');
+                submenu.appendChild(otherQuestionsBtn);
+            }
+        }
+
+        function showAnswer(question, answer) {
+            const chatBox = document.getElementById('chat-box');
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.textContent = question;
+
+            const answerDiv = document.createElement('div');
+            answerDiv.classList.add('response');
+            answerDiv.textContent = answer;
+
+            chatBox.appendChild(questionDiv);
+            chatBox.appendChild(answerDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Pastga avtomatik o'tkazish
+        }
+
+        function goBack() {
+            const submenu = document.getElementById('submenu');
+            if (submenu.style.display === 'grid' && currentCategory !== 'other') {
+                showGenderMenu(currentCategory);
+            } else {
+                document.getElementById('main-menu').style.display = 'grid';
+                document.getElementById('gender-menu').style.display = 'none';
+                document.getElementById('submenu').style.display = 'none';
+                document.getElementById('chat-box').innerHTML = '';
+                document.getElementById('backBtn').style.display = 'none';
+                currentCategory = '';
+            }
+        }
+
+        document.querySelector('#main-menu button:last-child').addEventListener('click', () => {
+            showSubMenu('other');
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'block';
+            currentCategory = 'other';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayt Sozlamalari</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .sozlama-bolimi {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+        .sozlama-nomi {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+        }
+        .sozlama-maydoni {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="color"],
+        input[type="checkbox"],
+        input[type="radio"],
+        select,
+        textarea {
+            width: calc(100% - 18px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23333" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1.2em;
+            padding-right: 30px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #1e7e34;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .success-message {
+            color: #198754;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .input-group > div {
+            flex-grow: 1;
+        }
+        .theme-options label {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .notification-options label {
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sayt Sozlamalari</h1>
+
+        <div class="sozlama-bolimi">
+            <div class="sozlama-nomi">Foydalanuvchi Profili</div>
+            <div class="sozlama-maydoni">
+                <label for="foydalanuvchi_ismi">Foydalanuvchi Ismi:</label>
+                <input type="text" id="foydalanuvchi_ismi" placeholder="Foydalanuvchi ismingiz">
+                <div class="error-message" id="foydalanuvchi_ismi-error"></div>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Email manzilingiz">
+                <div class="error-message" id="email-error"></div>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="parol">Parolni O'zgartirish:</label>
+                <input type="password" id="parol" placeholder="Yangi parol">
+                <div class="error-message" id="parol-error"></div>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="parol_tasdiqlash">Parolni Tasdiqlash:</label>
+                <input type="password" id="parol_tasdiqlash" placeholder="Yangi parolni tasdiqlang">
+                <div class="error-message" id="parol_tasdiqlash-error"></div>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="telefon">Telefon Raqami:</label>
+                <input type="tel" id="telefon" placeholder="+998 XX XXX XX XX">
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="manzil">Manzil:</label>
+                <textarea id="manzil" rows="3" placeholder="Manzilingizni kiriting"></textarea>
+            </div>
+        </div>
+
+        <div class="sozlama-bolimi">
+            <div class="sozlama-nomi">Ko'rinish Sozlamalari</div>
+            <div class="sozlama-maydoni theme-options">
+                <label>Sayt Temasi:</label>
+                <label><input type="radio" name="theme" value="light" checked> Yengil</label>
+                <label><input type="radio" name="theme" value="dark"> Qorong'u</label>
+                <label><input type="radio" name="theme" value="system"> Tizimga Mos</label>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="til">Til:</label>
+                <select id="til">
+                    <option value="uz">O'zbekcha</option>
+                    <option value="en">Inglizcha</option>
+                    <option value="ru">Ruscha</option>
+                </select>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="font_size">Shrift Hajmi:</label>
+                <input type="number" id="font_size" value="16" min="10" max="24">
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="font_family">Shrift Oila:</label>
+                <select id="font_family">
+                    <option value="Segoe UI">Segoe UI</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="sozlama-bolimi">
+            <div class="sozlama-nomi">Bildirishnomalar</div>
+            <div class="sozlama-maydoni notification-options">
+                <label><input type="checkbox" id="email_bildirish"> Email orqali bildirishnomalar</label>
+                <label><input type="checkbox" id="sms_bildirish"> SMS orqali bildirishnomalar</label>
+                <label for="bildirish_vaqti">Bildirishnomalar Vaqti:</label>
+                <input type="time" id="bildirish_vaqti">
+            </div>
+        </div>
+
+        <div class="sozlama-bolimi">
+            <div class="sozlama-nomi">Maxfiylik Sozlamalari</div>
+            <div class="sozlama-maydoni">
+                <label><input type="checkbox" id="shaxsiy_malumotlarni_yigish"> Shaxsiy ma'lumotlarni yig'ishga rozilik</label>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="cookie_analitika">Analitik Cookie Fayllari:</label>
+                <input type="checkbox" id="cookie_analitika" checked>
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="cookie_marketing">Marketing Cookie Fayllari:</label>
+                <input type="checkbox" id="cookie_marketing">
+            </div>
+            <div class="sozlama-maydoni">
+                <label for="maxfiylik_siyosati">Maxfiylik Siyosati:</label>
+                <textarea id="maxfiylik_siyosati" rows="5" readonly>Bu yerda saytning maxfiylik siyosati matni bo'lishi mumkin...</textarea>
+            </div>
+        </div>
+
+        <div class="sozlama-bolimi">
+            <div class="sozlama-nomi">Xavfsizlik Sozlamalari</div>
+            <div class="sozlama-maydoni">
+                <label><input type="checkbox" id="ikki_faktorli_autentifikatsiya"> Ikki Faktorli Autentifikatsiya</label>
+            </div>
+            <div class="sozlama-maydoni">
+                <label>Autentifikatsiya Usuli:</label>
+                <label><input type="radio" name="auth_method" value="sms" checked> SMS orqali kod</label>
+                <label><input type="radio" name="auth_method" value="app"> Autentifikator ilovasi</label>
+            </div>
+        </div>
+
+        <button onclick="saqlashSozlamalari()">Saqlash</button>
+        <div id="saqlash_natijasi" class="success-message" style="display: none;"></div>
+    </div>
+
+    <script>
+        function saqlashSozlamalari() {
+            // Bu yerda barcha sozlamalarni olish va saqlash uchun JavaScript kodingiz bo'lishi kerak
+            const sozlamalar = {
+                foydalanuvchi_ismi: document.getElementById('foydalanuvchi_ismi').value,
+                email: document.getElementById('email').value,
+                parol: document.getElementById('parol').value,
+                til: document.getElementById('til').value,
+                font_size: document.getElementById('font_size').value,
+                theme: document.querySelector('input[name="theme"]:checked').value,
+                email_bildirish: document.getElementById('email_bildirish').checked,
+                sms_bildirish: document.getElementById('sms_bildirish').checked,
+                bildirish_vaqti: document.getElementById('bildirish_vaqti').value,
+                shaxsiy_malumotlarni_yigish: document.getElementById('shaxsiy_malumotlarni_yigish').checked,
+                cookie_analitika: document.getElementById('cookie_analitika').checked,
+                cookie_marketing: document.getElementById('cookie_marketing').checked,
+                ikki_faktorli_autentifikatsiya: document.getElementById('ikki_faktorli_autentifikatsiya').checked,
+                auth_method: document.querySelector('input[name="auth_method"]:checked').value,
+                telefon: document.getElementById('telefon').value,
+                manzil: document.getElementById('manzil').value,
+                font_family: document.getElementById('font_family').value
+            };
+
+            console.log("Sozlamalar saqlandi:", sozlamalar);
+            document.getElementById('saqlash_natijasi').textContent = "Sozlamalar muvaffaqiyatli saqlandi!";
+            document.getElementById('saqlash_natijasi').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('saqlash_natijasi').style.display = 'none';
+            }, 3000);
+
+            // Bu yerda sozlamalarni serverga yuborish yoki local storagega saqlash kodingiz bo'lishi kerak
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HuggingChat Bot</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    #chat-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+    }
+    .message {
+      margin-bottom: 15px;
+    }
+    .user {
+      text-align: right;
+      color: blue;
+    }
+    .bot {
+      text-align: left;
+      color: green;
+    }
+    #input-area {
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      flex-grow: 1;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 HuggingChat Bot</h1>
+
+  <div id="chat-box"></div>
+
+  <div id="input-area">
+    <input type="text" id="user-input" placeholder="Savolingizni kiriting..." />
+    <button onclick="sendMessage()">Yuborish</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const userInput = document.getElementById('user-input');
+      const message = userInput.value;
+      if (!message) return;
+
+      // User message in UI
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<div class="message user"><strong>Siz:</strong> ${message}</div>`;
+      userInput.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ text: message })
+        });
+
+        const data = await response.json();
+
+        // Bot response in UI
+        chatBox.innerHTML += `<div class="message bot"><strong>Bot:</strong> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (error) {
+        chatBox.innerHTML += `<div class="message bot"><strong>Xatolik:</strong> Javobni olishda muammo yuz berdi.</div>`;
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>

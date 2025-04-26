@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI Kalkulyator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #28a745;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .results-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .result-title {
+            font-size: 1.3em;
+            color: #28a745;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 1em;
+        }
+
+        .recommendation-title {
+            font-size: 1.2em;
+            color: #007bff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .recommendation-list {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .recommendation-item {
+            margin-bottom: 8px;
+            color: #5a6268;
+            font-size: 1em;
+        }
+
+        .warning {
+            background-color: #ffe3e0;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .bmi-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bmi-table th, .bmi-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .bmi-table th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .bmi-table td {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TMI Kalkulyator</h1>
+
+        <div class="input-group">
+            <label for="weight">1️⃣ Vazn (kg):</label>
+            <input type="number" id="weight" placeholder="Vazningizni kiriting">
+        </div>
+
+        <div class="input-group">
+            <label for="height">2️⃣ Bo'y (sm):</label>
+            <input type="number" id="height" placeholder="Bo'yingizni kiriting">
+        </div>
+
+        <button onclick="calculateTMI()">Hisoblash</button>
+
+        <div class="results-container" id="results"></div>
+
+        <div class="bmi-table">
+            <h3>TMI Kategoriyalari:</h3>
+            <table>
+                <tr>
+                    <th>TMI (Tana Massasi Indeksi) — bu insonning tana vazni va bo'yi o'rtasidagi bog'liqlikni o'lchaydigan ko'rsatkichdir. TMI sizning bo'y va vazningizni hisobga olib, tanangizning ideal vazn holatini aniqlashga yordam beradi. TMI ko'rsatkichi orqali odamning tana vazni normaga mos kelishini, ortiqcha vazn yoki past vazn borligini bilish mumkin.</th>
+                    <th>Vazn Holati</th>
+                </tr>
+                <tr>
+                    <td>&lt; 16</td>
+                    <td>Yuqori vazn yetishmasligi</td>
+                </tr>
+                <tr>
+                    <td>16 - 18.5</td>
+                    <td>Vazn yetishmasligi</td>
+                </tr>
+                <tr>
+                    <td>18.5 - 25</td>
+                    <td>Ideal vazn (Me'yoriy)</td>
+                </tr>
+                <tr>
+                    <td>25 - 30</td>
+                    <td>Ortiqcha vazn</td>
+                </tr>
+                <tr>
+                    <td>30 - 35</td>
+                    <td>Semizlilikning I darajasi</td>
+                </tr>
+                <tr>
+                    <td>35 - 40</td>
+                    <td>Semizlilikning II darajasi</td>
+                </tr>
+                <tr>
+                    <td>&gt; 40</td>
+                    <td>Semizlilikning III darajasi</td>
+                </tr>
+            </table>
+        </div>
+
+        <button onclick="downloadPDF()">PDF Yuklab olish</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        function calculateTMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value) / 100;  // Convert cm to meters
+            const resultsDiv = document.getElementById('results');
+
+            if (isNaN(weight) || isNaN(height) || height <= 0) {
+                resultsDiv.innerHTML = "<p class='warning'>Iltimos, barcha maydonlarni to'g'ri to'ldiring.</p>";
+                return;
+            }
+
+            const tmi = weight / (height * height);
+            const tmiRounded = tmi.toFixed(1);
+            let weightCategory = '';
+            let recommendations = [];
+            let weeklyDietPlan = [];
+            let weeklyExercisePlan = [];
+
+            if (tmi < 16) {
+                weightCategory = 'Yuqori vazn yetishmasligi';
+                recommendations = ['Yengil ovqatlanish, ko‘p proteinli ovqatlar', 'Eng kamida haftada 3 marta yengil mashqlar'];
+                weeklyDietPlan = ['Dushanba: Proteinli nonushta', 'Chorshanba: Ko‘p meva va sabzavotlar', 'Juma: Kam kaloriyali ovqatlar'];
+                weeklyExercisePlan = ['Dushanba: 30 daqiqa yugurish', 'Chorshanba: 20 daqiqa yog‘ish mashqlari', 'Juma: 15 daqiqa yoga'];
+            } else if (tmi >= 16 && tmi < 18.5) {
+                weightCategory = 'Vazn yetishmasligi';
+                recommendations = ['Ovqatni ko‘paytirish, kaloriyali mahsulotlar', 'Haftada 4-5 marta kuch ishlatadigan mashqlar'];
+                weeklyDietPlan = ['Dushanba: Yog‘li ovqatlar', 'Chorshanba: Ko‘p kaloriyali ovqatlar', 'Juma: Mavjud dietani ko‘paytirish'];
+                weeklyExercisePlan = ['Dushanba: Kuchli mashqlar', 'Chorshanba: Zaxira mashqlar', 'Juma: 40 daqiqa jismoniy mashqlar'];
+            } else if (tmi >= 18.5 && tmi < 25) {
+                weightCategory = 'Ideal vazn (Me\'yoriy)';
+                recommendations = ['Meyoriy ovqatlanish, balansli ovqatlar', 'Haftada 3 marta aerobik mashqlar'];
+                weeklyDietPlan = ['Dushanba: Balansli nonushta', 'Chorshanba: Yengil ovqatlanish', 'Juma: Foydali ovqatlar'];
+                weeklyExercisePlan = ['Dushanba: Aerobik mashqlarning asosiy xususiyatlari.Doimiy ritm: Harakatlar bir maromda va ritmik tarzda bajariladi.Katta mushak guruhlarining ishtiroki.Yurak-qon toqimalarining faollashuvi.', 'Chorshanba: 30 daqiqa yengil mashqlar', 'Juma: 30 daqiqa yugurish'];
+            } else if (tmi >= 25 && tmi < 30) {
+                weightCategory = 'Ortiqcha vazn';
+                recommendations = ['Past kaloriyali dietalar, yengil ovqatlanish', 'Haftada 4 marta aerobik mashqlar'];
+                weeklyDietPlan = ['Dushanba: Kam kaloriyali ovqatlar', 'Chorshanba: Kam uglevodli ovqatlar', 'Juma: Mevalar bilan ovqatlanish'];
+                weeklyExercisePlan = ['Dushanba: 30 daqiqa yugurish', 'Chorshanba: 20 daqiqa jismoniy mashqlar', 'Juma: 30 daqiqa velosipedda yurish'];
+            } else if (tmi >= 30 && tmi < 35) {
+                weightCategory = 'Semizlilikning I darajasi';
+                recommendations = ['Past kaloriyali ovqatlar, ovqatlanishni nazorat qilish', 'Haftada 5 marta aerobik mashqlar'];
+                weeklyDietPlan = ['Dushanba: Kam kaloriyali dietalar', 'Chorshanba: Proteinli ovqatlar', 'Juma: Ko‘p sabzavotlar'];
+                weeklyExercisePlan = ['Dushanba: 45 daqiqa yugurish', 'Chorshanba: 30 daqiqa yoga', 'Juma: 45 daqiqa velosipedda yurish'];
+            } else if (tmi >= 35 && tmi < 40) {
+                weightCategory = 'Semizlilikning II darajasi';
+                recommendations = ['Tibbiy maslahat bilan dietalar', 'Yengil mashqlar, haftada 5 marta'];
+                weeklyDietPlan = ['Dushanba: Yengil ovqatlanish', 'Chorshanba: Yaxshi uglevodlar', 'Juma: Kam kaloriyali ovqatlar'];
+                weeklyExercisePlan = ['Dushanba: 45 daqiqa yugurish', 'Chorshanba: 30 daqiqa yoga', 'Juma: 40 daqiqa jismoniy mashqlar'];
+            } else {
+                weightCategory = 'Semizlilikning III darajasi';
+                recommendations = ['Mutaxassis bilan davolanish', 'Yengil jismoniy mashqlar'];
+                weeklyDietPlan = ['Dushanba: Dieta rejalashtirish', 'Chorshanba: Vitaminli ovqatlar', 'Juma: Kam kaloriyali va yengil ovqatlar'];
+                weeklyExercisePlan = ['Dushanba: 30 daqiqa mashqlar', 'Chorshanba: 15 daqiqa yoga', 'Juma: 40 daqiqa yurish'];
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="result-title">Natija:</div>
+                <p class="result-item">Sizning TMI: <strong>${tmiRounded}</strong></p>
+                <p class="result-item">Vazn holati: <strong>${weightCategory}</strong></p>
+                <div class="recommendation-title">Tavsiyalar:</div>
+                <ul class="recommendation-list">
+                    ${recommendations.map(item => `<li class="recommendation-item">${item}</li>`).join('')}
+                </ul>
+                <div class="weekly-plan-title">Bir haftalik rejalar:</div>
+                <table class="weekly-plan-table">
+                    <tr><th>Kun</th><th>Ovqatlanish Rejasi</th><th>Jismoniy Mashqlar</th></tr>
+                    ${['Dushanba', 'Chorshanba', 'Juma'].map((day, index) => `
+                        <tr>
+                            <td>${day}</td>
+                            <td>${weeklyDietPlan[index]}</td>
+                            <td>${weeklyExercisePlan[index]}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
+        }
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const results = document.getElementById('results').innerText;
+            const bmiTableElement = document.querySelector('.bmi-table');
+            const tableData = [];
+            const tableHeaders = [];
+
+            // Jadval sarlavhalarini olish
+            const headerRow = bmiTableElement.querySelector('thead tr');
+            if (headerRow) {
+                headerRow.querySelectorAll('th').forEach(th => {
+                    tableHeaders.push(th.innerText);
+                });
+            }
+
+            // Jadval ma'lumotlarini olish
+            const bodyRows = bmiTableElement.querySelectorAll('tbody tr');
+            bodyRows.forEach(row => {
+                const rowData = [];
+                row.querySelectorAll('td').forEach(td => {
+                    rowData.push(td.innerText);
+                });
+                tableData.push(rowData);
+            });
+
+            const margin = 10;
+            let yPosition = margin;
+            const lineHeight = 7; // Qatorlararo masofa
+
+            doc.setFontSize(16);
+            doc.text("TMI Kalkulyator Natijalari", margin, yPosition);
+            yPosition += lineHeight + 5;
+
+            doc.setFontSize(12);
+            const resultsLines = doc.splitTextToSize(results, doc.internal.pageSize.width - 2 * margin);
+            resultsLines.forEach(line => {
+                doc.text(line, margin, yPosition);
+                yPosition += lineHeight;
+            });
+            yPosition += 10;
+
+            doc.setFontSize(14);
+            doc.text("TMI Kategoriyalari:", margin, yPosition);
+            yPosition += lineHeight + 5;
+
+            // Jadvalni PDFga qo'shish (stil bilan)
+            doc.autoTable({
+                head: [tableHeaders],
+                body: tableData,
+                startY: yPosition,
+                margin: { left: margin, right: margin },
+                styles: {
+                    font: 'helvetica', fontSize: 10, cellPadding: 2, overflow: 'linebreak',
+                    lineWidth: 0.5, lineColor: [0, 0, 0] // Qora chiziqlar
+                },
+                headStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0], fontStyle: 'bold' }, // Kulrang fon, qora tekst, qalin
+                columnStyles: { 0: { halign: 'left' }, 1: { halign: 'center' }, 2: { halign: 'right' } } // Ustunlarni tekislash
+            });
+
+            doc.save("TMI_kalkulyator_natijalari.pdf");
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.plugin.autotable.min.js"></script>
+</body>
+
+</html>

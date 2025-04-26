@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haftalik Ovqatlanish Rejasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 95%;
+            max-width: 900px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .gender-selection {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            margin: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .meal-plan-container {
+            display: none;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .meal-plan-container h2 {
+            color: #5cb85c;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .meal-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: #777;
+            text-align: center;
+        }
+
+        /* Kichik ekranlar uchun (telefonlar) */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 100%;
+                padding: 15px;
+                border-radius: 5px;
+            }
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            .gender-selection button {
+                padding: 10px 20px;
+                font-size: 1em;
+                margin: 5px;
+            }
+            .meal-plan-container h2 {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            table {
+                font-size: 0.8em;
+            }
+            th, td {
+                padding: 6px;
+            }
+            .meal-details {
+                font-size: 0.8em;
+            }
+            .note {
+                font-size: 0.8em;
+            }
+        }
+
+        /* O'rta ekranlar uchun (planshetlar) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .gender-selection button {
+                font-size: 1.05em;
+                padding: 11px 22px;
+            }
+            .meal-plan-container h2 {
+                font-size: 1.4em;
+            }
+            table {
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Haftalik Ovqatlanish Rejasi</h1>
+        <div class="gender-selection">
+            <button id="male-btn">Erkaklar uchun</button>
+            <button id="female-btn">Ayollar uchun</button>
+        </div>
+
+        <div id="male-meal-plan" class="meal-plan-container meal-plan">
+            <h2>Erkaklar uchun Haftalik Ovqatlanish Rejasi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kun</th>
+                        <th>Vaqt</th>
+                        <th>Nima yeyiladi</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th rowspan="3">Dushanba</th>
+                        <td>Nonushta (7:00-8:00)</td>
+                        <td>2 dona tuxum (qaynatilgan yoki omlet), 1 bo'lak to'liq donli non, 1 ta banan, bir stakan suv yoki ko'k choy</td>
+                        <td class="meal-details">Oqsil va energiya manbai</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:00-14:00)</td>
+                        <td>150gr mol go'shti (dimlangan yoki grilda), 1 piyola jigarrang guruch, katta porsiya sabzavotli salat (pomidor, bodring, ko'katlar, zaytun yog'i bilan)</td>
+                        <td class="meal-details">Oqsil, murakkab uglevodlar va vitaminlar</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>200gr tovuq filesi (grilda yoki duxovkada), 1 ta katta kartoshka (qaynatilgan yoki duxovkada), 1 piyola brokkoli (bug'da pishirilgan)</td>
+                        <td class="meal-details">Oqsil va tolaga boy</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Seshanba</th>
+                        <td>Nonushta (7:00-8:00)</td>
+                        <td>1 piyola suli yormasi (suv yoki yog'siz sutda), 1 osh qoshiq yong'oq (bodom, yeryong'oq), bir hovuch mayiz yoki boshqa quritilgan mevalar</td>
+                        <td class="meal-details">Uzoq muddatli energiya beradi</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:00-14:00)</td>
+                        <td>Qaynatilgan loviya yoki no'xatdan tayyorlangan sho'rva (yog'siz), 1 bo'lak javdar noni, 1 ta olma</td>
+                        <td class="meal-details">O'simlik oqsili va tola</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>150gr baliq (treska, okun), sabzavotli qovurdoq (bolgar qalampiri, piyoz, sabzi, qovoq)</td>
+                        <td class="meal-details">Oson hazm bo'ladigan oqsil</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Chorshanba</th>
+                        <td>Nonushta (7:00-8:00)</td>
+                        <td>Tvorogli massa (200gr) kam yog'li, 1 ta nok</td>
+                        <td class="meal-details">Oqsil va kalsiy manbai</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:00-14:00)</td>
+                        <td>Tovuqli salat (qaynatilgan tovuq, ko'katlar, bodring, pomidor, limon sharbati bilan)</td>
+                        <td class="meal-details">Yengil va oqsilga boy</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>180gr kurka filesi (duxovkada pishirilgan), sabzavotli pyure (gulkaram, brokkoli)</td>
+                        <td class="meal-details">Kam yog'li oqsil</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Payshanba</th>
+                        <td>Nonushta (7:00-8:00)</td>
+                        <td>3 dona tuxum oqi va 1 ta sariqlikdan omlet, ismaloq va qo'ziqorin bilan</td>
+                        <td class="meal-details">Oqsilga boy</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:00-14:00)</td>
+                        <td>Grechka (1 piyola), dimlangan qo'y go'shti (120gr), sabzavotli salat</td>
+                        <td class="meal-details">Murakkab uglevodlar va oqsil</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>Dengiz mahsulotlari (qisqichbaqalar, midiyalar) 200gr, sabzavotlar bilan</td>
+                        <td class="meal-details">Yengil oqsil va mikroelementlar</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Juma</th>
+                        <td>Nonushta (7:00-8:00)</td>
+                        <td>Non va avokado (1 bo'lak to'liq donli non, yarimta avokado)</td>
+                        <td class="meal-details">Sog'lom yog'lar va tola</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:00-14:00)</td>
+                        <td>Sabzavotli va tovuqli burrito (to'liq donli lavashda)</td>
+                        <td class="meal-details">Muvozanatli ovqat</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>Tofu (150gr) sabzavotlar bilan qovurilgan</td>
+                        <td class="meal-details">O'simlik oqsili</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Shanba</th>
+                        <td>Nonushta (8:00-9:00)</td>
+                        <td>Pankeyklar (to'liq donli undan, mevalar bilan)</td>
+                        <td class="meal-details">Dam olish kuni uchun energiya</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (14:00-15:00)</td>
+                        <td>Pizza (to'liq donli asosda, ko'p sabzavotlar va kam yog'li pishloq bilan)</td>
+                        <td class="meal-details">Mo'tadil porsiya</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (20:00-21:00)</td>
+                        <td>Grilda pishirilgan mol go'shti (100gr), katta salat</td>
+                        <td class="meal-details">Oqsilga boy</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Yakshanba</th>
+                        <td>Nonushta (9:00-10:00)</td>
+                        <td>Smuzi (mevalar, ismaloq, yogurt)</td>
+                        <td class="meal-details">Vitaminlar va oson hazm bo'lish</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (14:00-15:00)</td>
+                        <td>Qaynatilgan tovuqli va sabzavotli noodle sho'rva</td>
+                        <td class="meal-details">Yengil va to'yimli</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:00-20:00)</td>
+                        <td>Omlet (3 dona tuxumdan, sabzavotlar bilan)</td>
+                        <td class="meal-details">Oqsilga boy va yengil</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="note"><strong>Eslatma:</strong> Ushbu reja umumiy tavsiyalarga asoslangan. Shaxsiy ehtiyojlaringiz va sog'lig'ingizga qarab o'zgartirishlar kiritishingiz mumkin. Kun davomida etarli miqdorda suv ichishni unutmang.</p>
+        </div>
+
+        <div id="female-meal-plan" class="meal-plan-container meal-plan">
+            <h2>Ayollar uchun Haftalik Ovqatlanish Rejasi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kun</th>
+                        <th>Vaqt</th>
+                        <th>Nima yeyiladi</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th rowspan="3">Dushanba</th>
+                        <td>Nonushta (7:30-8:30)</td>
+                        <td>1 piyola yogurt (kam yog'li), yarim piyola granola, yarim piyola rezavorlar (malina, qulupnay)</td>
+                        <td class="meal-details">Oqsil, tola va antioksidantlar</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:30-14:30)</td>
+                        <td>Salat (arugula, ismaloq, cherry pomidorlari, bodring, 100gr grilda pishirilgan tovuq ko'kragi, 1 osh qoshiq zaytun yog'i va limon sharbati bilan)</td>
+                        <td class="meal-details">Yengil, oqsilga boy va vitaminlarga boy</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>150gr qizil baliq (duxovkada pishirilgan), yarim piyola quinoa, 1 piyola bug'da pishirilgan yashil loviya</td>
+                        <td class="meal-details">Omega-3 yog' kislotalari va oqsil manbai</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Seshanba</th>
+                        <td>Nonushta (7:30-8:30)</td>
+                        <td>1 bo'lak to'liq donli non, yarimta avokado, 1 ta qaynatilgan tuxum</td>
+                        <td class="meal-details">Sog'lom yog'lar va oqsil</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:30-14:30)</td>
+                        <td>Sabzavotli sho'rva (brokkoli, sabzi, kartoshka), 1 bo'lak to'liq donli non</td>
+                        <td class="meal-details">Tola va vitaminlarga boy</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>120gr kurka filesi (qovurilgan), katta porsiya aralash sabzavotlar (qalampir, piyoz, qovoq)</td>
+                        <td class="meal-details">Kam yog'li oqsil</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Chorshanba</th>
+                        <td>Nonushta (7:30-8:30)</td>
+                        <td>Smuzi (1 stakan bodom suti, yarimta banan, yarim piyola ismaloq, 1 osh qoshiq chia urug'lari)</td>
+                        <td class="meal-details">Vitaminlar va tola</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:30-14:30)</td>
+                        <td>Tuna baliqli salat (konservalangan tuna, selderey, piyoz, kam yog'li mayonez, to'liq donlito'liq donli krekerlar)</td>
+                        <td class="meal-details">Oqsilga boy va yengil</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>Vegetarian chili (loviya, pomidor, makkajo'xori, ziravorlar)</td>
+                        <td class="meal-details">O'simlik oqsili va tola</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Payshanba</th>
+                        <td>Nonushta (7:30-8:30)</td>
+                        <td>2 dona to'liq donli tost, 2 osh qoshiq yeryong'oq pastasi, yarimta olma</td>
+                        <td class="meal-details">Energiya va sog'lom yog'lar</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:30-14:30)</td>
+                        <td>Tovuqli va sabzavotli wrap (to'liq donli tortillada, humus bilan)</td>
+                        <td class="meal-details">Muvozanatli ovqat</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>Qovoqli pasta (spagetti o'rniga qovoqdan tayyorlangan, pomidor sousi va maydalangan parmezan bilan)</td>
+                        <td class="meal-details">Kam uglevodli va to'yimli</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Juma</th>
+                        <td>Nonushta (7:30-8:30)</td>
+                        <td>Oatmeal (yarim piyola quruq suli, 1 stakan suv yoki sut, mevalar va bir oz asal)</td>
+                        <td class="meal-details">Uzoq muddatli energiya beradi</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (13:30-14:30)</td>
+                        <td>Lentil sho'rva (sabzavotlar bilan)</td>
+                        <td class="meal-details">O'simlik oqsili va tola</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>Tovuq va sabzavotli kabob (qalampir, piyoz, cherry pomidorlari bilan)</td>
+                        <td class="meal-details">Kam yog'li oqsil va sabzavotlar</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Shanba</th>
+                        <td>Nonushta (8:30-9:30)</td>
+                        <td>Pancake (2 dona, to'liq donli undan, rezavorlar va bir oz sirop bilan)</td>
+                        <td class="meal-details">Dam olish kuni uchun</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (14:30-15:30)</td>
+                        <td>Uy sharoitida tayyorlangan burger (to'liq donli bulochkada, kurka yoki tovuq kotleti, ko'p sabzavotlar bilan)</td>
+                        <td class="meal-details">Mo'tadil porsiya</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (20:30-21:30)</td>
+                        <td>Sabzavotli lazanya (kam yog'li pishloq bilan)</td>
+                        <td class="meal-details">Vegetarian va to'yimli</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">Yakshanba</th>
+                        <td>Nonushta (9:30-10:30)</td>
+                        <td>Tuxumli burito (tuxum, loviya, salsa, avokado, to'liq donli tortillada)</td>
+                        <td class="meal-details">Oqsil va sog'lom yog'lar</td>
+                    </tr>
+                    <tr>
+                        <td>Tushlik (14:30-15:30)</td>
+                        <td>Qaynatilgan tovuqli va sabzavotli noodle salat</td>
+                        <td class="meal-details">Yengil va to'yimli</td>
+                    </tr>
+                    <tr>
+                        <td>Kechki ovqat (19:30-20:30)</td>
+                        <td>O'choqda pishirilgan tovuq (kichik porsiya), sabzavotlar bilan</td>
+                        <td class="meal-details">Oson hazm bo'ladigan oqsil</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="note"><strong>Eslatma:</strong> Ushbu reja taxminiy bo'lib, ayolning yoshi, vazni, faollik darajasi va maqsadlariga qarab o'zgarishi mumkin. Kun davomida kamida 1,5-2 litr suv ichish tavsiya etiladi. Gazlangan ichimliklar va shirinliklardan voz kechishga harakat qiling.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const maleBtn = document.getElementById('male-btn');
+            const femaleBtn = document.getElementById('female-btn');
+            const maleMealPlan = document.getElementById('male-meal-plan');
+            const femaleMealPlan = document.getElementById('female-meal-plan');
+
+            maleBtn.addEventListener('click', function() {
+                maleMealPlan.style.display = 'block';
+                femaleMealPlan.style.display = 'none';
+            });
+
+            femaleBtn.addEventListener('click', function() {
+                femaleMealPlan.style.display = 'block';
+                maleMealPlan.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><i class="fas fa-dumbbell"></i> Fitness Mashq Videosi</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e293b;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .menu button {
+      padding: 14px 24px;
+      background: #0ea5e9;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .menu button:hover {
+      background: #0284c7;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .video-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .video-section.active {
+      display: block;
+    }
+
+    .video-section h2 {
+      color: #0f172a;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .video-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .video-item {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .video-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .video-item h3 {
+      font-size: 1.2em;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .video-item p {
+      font-size: 0.95em;
+      color: #475569;
+      margin-bottom: 15px;
+    }
+
+    .video-item a {
+      display: inline-block;
+      background: #e0f2fe;
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #bae6fd;
+      transition: all 0.3s ease;
+    }
+
+    .video-item a:hover {
+      background: #bae6fd;
+      color: #0369a1;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .menu button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Fitness Mashq Videosi</h1>
+
+    <div class="menu">
+      <button onclick="showVideos('male')">💪 Erkaklar uchun</button>
+      <button onclick="showVideos('female')">🧘 Ayollar uchun</button>
+    </div>
+
+    <!-- Erkaklar bo'limi -->
+    <div id="maleVideos" class="video-section">
+      <h2>Erkaklar uchun Mashqlar</h2>
+      <div class="video-list">
+        <div class="video-item">
+          <h3>Uy sharoitida bajariladigan mashqlar.</h3>
+          <p>Uyda qorin bo'shlig'ini mashq qilish.</p>
+          <a href="https://youtube.com/shorts/VTRQhWInOWs?si=g0JAQfLcHMs-Wf_l" target="_blank">Videoni ko‘rish</a>
+        </div>
+        <div class="video-item">
+          <h3>Ko‘krak qafasi uchun bajariladigan mashqlar.
+          </h3>
+          <p>Kuchli va hajmli ko‘krak mushaklari uchun asosiy mashqlar.</p>
+          <a href="https://youtube.com/shorts/9XZSQC0Az_E?si=YZSx8_BetM_GdD_9" target="_blank">Videoni ko‘rish</a>
+        </div>
+        <div class="video-item">
+          <h3> Qorin bo'shlig'i va ko'krak mashqlar. </h3>
+          <p>Qorin bo'shlig'i bilan ko'krak mashqlari</p>
+          <a href="https://youtube.com/shorts/MA-Lka92VKM?si=pYkm86vSShXpQRoc" target="_blank">Videoni ko‘rish</a>
+        </div>
+        <div class="video-item">
+          <h3>Barcha qismlar uchun mashqlar.</h3>
+          <p>Tanani barcha qismlari uchun mashqlar.</p>
+          <a href="https://youtube.com/shorts/3yQX4PecfUU?si=ZqDN3cIeHKcElEW_" target="_blank">Videoni ko‘rish</a>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Ayollar bo'limi -->
+    <div id="femaleVideos" class="video-section">
+      <h2>Ayollar uchun Mashqlar</h2>
+      <div class="video-list">
+        <div class="video-item">
+          <h3>To‘liq Tana (Full Body for Women)</h3>
+          <p>Qorindagi yog‘larni yo‘qotish va tana chizig‘ini shakllantirish uchun mashqlar.</p>
+          <a href="https://youtube.com/shorts/eUzAECsOdhk?si=t6FXPsEMut-Elgp0" target="_blank">Videoni ko‘rish</a>
+        </div>
+        <div class="video-item">
+          <h3>Bel uchun kichik mashqlar</h3>
+          <p>Kichik bel va chiroyli press uchun samarali mashqlar.</p>
+          <a href="https://youtu.be/710GEbdlnic?si=GQ8acKNp8WFBIrXA" target="_blank">Videoni ko‘rish</a>
+        </div>
+        <div class="video-item">
+          <h3>Qorin Yog‘ini Eritish (Belly Fat Workout)</h3>
+          <p>Osilib qolgan yog‘lardan xalos bo‘lishga yordam beruvchi mashqlar.</p>
+          <a href="https://youtu.be/O0kJpB7lijQ" target="_blank">Videoni ko‘rish</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function showVideos(gender) {
+        // Barcha videolarni yashirish
+        document.getElementById("maleVideos").style.display = 'none';
+        document.getElementById("femaleVideos").style.display = 'none';
+
+        // Tanlangan jinsga mos videolarni ko'rsatish
+        if (gender === 'male') {
+            document.getElementById("maleVideos").style.display = 'block';
+        } else if (gender === 'female') {
+            document.getElementById("femaleVideos").style.display = 'block';
+        }
+    }
+</script>
+
+
+</body>
+</html>

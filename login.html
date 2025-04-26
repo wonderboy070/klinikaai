@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Ro'yxatdan O'tish / Kirish</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Umumiy stillar */
         * {
             box-sizing: border-box;
         }
@@ -52,9 +53,8 @@
             margin: 15px 0;
         }
 
-        /* Brend nomi stili */
         .brand-title {
-            font-size: 40px;
+            font-size: 36px;
             font-weight: 800;
             font-family: 'Montserrat', sans-serif;
             background: linear-gradient(to right, #FF416C, #FF4B2B);
@@ -68,7 +68,7 @@
         }
 
         .brand-title span {
-            font-size: 34px;
+            font-size: 28px;
             background: linear-gradient(to right, #00c6ff, #0072ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -80,46 +80,43 @@
             50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
+		button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: crimson;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+    border: none; /* Tugmalarning standart chegarasini olib tashlash */
+    cursor: pointer; /* Sichqoncha ustiga kelganda kursorni o'zgartirish */
+    font-size: 16px; /* Matn hajmini biroz kattalashtirish */
+    font-weight: bold; /* Matnni qalin qilish */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Soyalar qo'shish */
+}
 
-        /* Tugma stillari */
-        button {
-            display: inline-block;
-            padding: 10px 20px;
-            background: crimson;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-            margin-top: 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-        }
+button:hover {
+    background: #fff;
+    color: crimson; /* Hoverda ranglarni almashtirish */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5); /* Hoverda soyani kuchaytirish */
+}
 
-        button:hover {
-            background: #fff;
-            color: crimson;
-            box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
-        }
+button:active {
+    transform: scale(0.95); /* Bosilganda biroz kichraytirish */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Bosilganda soyani kamaytirish */
+}
 
-        button:active {
-            transform: scale(0.95);
-            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-        }
-
-        button:focus {
-            outline: none;
-            box-shadow: 0 0 5px dodgerblue;
-        }
+button:focus {
+    outline: none; /* Fokus bo'lganda standart ramkani olib tashlash */
+    box-shadow: 0 0 5px dodgerblue; /* Fokus bo'lganda o'ziga xos ramka qo'shish */
+}
 
         button.ghost {
             background-color: transparent;
             border-color: #FFFFFF;
         }
 
-        /* Forma stillari */
         form {
             background-color: #FFFFFF;
             display: flex;
@@ -139,7 +136,6 @@
             width: 100%;
         }
 
-        /* Konteyner stili */
         .container {
             background-color: #fff;
             border-radius: 10px;
@@ -152,7 +148,6 @@
             min-height: 480px;
         }
 
-        /* Forma konteynerlari stillari */
         .form-container {
             position: absolute;
             top: 0;
@@ -189,7 +184,6 @@
             50%, 100% { opacity: 1; z-index: 5; }
         }
 
-        /* Overlay konteyneri stili */
         .overlay-container {
             position: absolute;
             top: 0;
@@ -205,7 +199,6 @@
             transform: translateX(-100%);
         }
 
-        /* Overlay stili */
         .overlay {
             background: linear-gradient(to right, #28b5f7, #e86bf3);
             color: #FFFFFF;
@@ -221,7 +214,6 @@
             transform: translateX(50%);
         }
 
-        /* Overlay panel stillari */
         .overlay-panel {
             position: absolute;
             display: flex;
@@ -254,7 +246,6 @@
             transform: translateX(20%);
         }
 
-        /* Ijtimoiy tarmoqlar konteyneri stili */
         .social-container {
             margin: 20px 0;
             display: flex;
@@ -262,7 +253,6 @@
             gap: 20px;
         }
 
-        /* Ijtimoiy tarmoqlar qutisi stili */
         .social-box {
             display: flex;
             flex-direction: column;
@@ -271,181 +261,194 @@
             font-size: 1.5empx;
             width: 70px;
         }
+		.social-box a {
+    border: 1px solid crimson;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+    color: crimson;
+    transition: all 0.3s ease-in-out; /* Yumshoqroq o'tish */
+    text-decoration: none; /* Standart tag chiziqni olib tashlash */
+    font-size: 1.2em; /* Ikonkalar uchun biroz kattaroq o'lcham */
+}
 
-        .social-box a {
-            border: 1px solid crimson;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            margin-bottom: 5px;
-            color: crimson;
-            transition: all 0.3s ease-in-out;
-            text-decoration: none;
-            font-size: 1.2em;
-        }
+.social-box a:hover {
+    background: crimson; /* Hoverda fonni asosiy rangga o'zgartirish */
+    color: #fff; /* Hoverda matn/ikonka rangini oqga o'zgartirish */
+    border-color: crimson; /* Hoverda chegarani ham asosiy rangga o'zgartirish */
+    box-shadow: 0 0 8px rgba(220, 20, 60, 0.5); /* Nozik soya qo'shish */
+    transform: scale(1.1); /* Hoverda biroz kattalashtirish */
+}
 
-        .social-box a:hover {
-            background: crimson;
-            color: #fff;
-            border-color: crimson;
-            box-shadow: 0 0 8px rgba(220, 20, 60, 0.5);
-            transform: scale(1.1);
-        }
+.social-box a:focus {
+    outline: none; /* Fokus bo'lganda standart ramkani olib tashlash */
+    box-shadow: 0 0 5px dodgerblue; /* Fokus bo'lganda o'ziga xos ramka qo'shish */
+}
 
-        .social-box a:focus {
-            outline: none;
-            box-shadow: 0 0 5px dodgerblue;
-        }
+.social-box a:active {
+    transform: scale(0.95); /* Bosilganda biroz kichraytirish */
+}
 
-        .social-box a:active {
-            transform: scale(0.95);
-        }
 
-        /* Sog'liq platformasi ikonkalari */
-        .health-platform-icons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 10px;
-        }
 
-        .health-platform-icons > div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-            cursor: pointer;
-            font-size: 1.1em;
-            color: #333; /* Standart matn rangi */
-        }
 
-        .health-platform-icons > div:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
 
-        .health-platform-icons i {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #007bff; /* Asosiy ikonka rangi */
-        }
+.health-platform-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
 
-        .health-platform-icons span {
-            font-weight: bold;
-        }
+.health-platform-icons > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
 
-        /* Har bir yo'nalish uchun o'ziga xos ranglar */
-        .clinic-platform i { color: #5efdb6; } /* Klinikalar uchun yashil */
-        .doctor-platform i { color: #038eb1; } /* Mediklar uchun ko'k */
-        .ai-trainer i { color: #7b2cfc; } /* AI Fitness Trener uchun to'q sariq */
-        .ai-dietitian i { color: #dd4b39; } /* AI Dietolog uchun qizil */
-        .ai-psychologist i { color: #605ca8; } /* Psixolog AI uchun binafsha */
-        .medical-ai i { color: #0a2e52; } /* Fit AI uchun to'q ko'k */
-        .cybersecurity i {
-            font-size: 3em;
-            color: #3f2afc;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
+.health-platform-icons > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-        .cybersecurity span {
-            color: #0f0344;
-            font-size: 1.1em;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
+.health-platform-icons i {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #007bff; /* Asosiy rang */
+}
+
+.health-platform-icons span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Har bir yo'nalish uchun o'ziga xos ranglar (innovatsionlik uchun) */
+.ai-trainer i { color: #28a745; } /* Yashil */
+.ai-dietitian i { color: #ffc107; } /* Sariq */
+.ai-psychologist i { color: #dc3545; } /* Qizil */
+.medical-ai i { color: #17a2b8; } /* Moviy-ko'k */
+.cybersecurity i { color: #6c757d; } /* Kulrang */
+
+/* Kibirxavfsizlik ikonkasiga alohida stil */
+.cybersecurity i {
+    font-size: 3em; /* Kibirxavfsizlik biroz kattaroq */
+    color: #3f2afc; /* To'q sariq - ogohlantirish va xavfsizlik */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Soyalar */
+}
+
+.cybersecurity span {
+    color: #0f0344;
+    font-size: 1.1em;
+    font-weight: 900; /* Yanada qalin */
+    letter-spacing: 1px; /* Harflar orasini ochish */
+}
+
+
+
+
+
+
     </style>
 </head>
 <body>
 
-    <h2 class="brand-title">Rapid <span>Growth</span></h2>
-    <div class="container" id="container">
-        <div class="form-container sign-up-container">
-            <form action="#">
-                <h1 style="font-size: 2.5em;">Hisob yaratish</h1>
-                <div class="social-container">
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fab fa-facebook-f"></i></a>
-                        <span style="font-size: 1.2em;">Facebook</span>
-                    </div>
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fab fa-google-plus-g"></i></a>
-                        <span style="font-size: 1.2em;">Google+</span>
-                    </div>
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fab fa-linkedin-in"></i></a>
-                        <span style="font-size: 1.2em;">LinkedIn</span>
-                    </div>
-                </div>
-                <span style="font-size: 1.1em;">Yoki foydalanuvchi nomi bilan ro'yxatdan o'ting</span>
-                <input type="text" placeholder="Foydalanuvchi nomi" style="font-size: 1.1em; padding: 12px;" />
-                <input type="password" placeholder="Parol" style="font-size: 1.1em; padding: 12px;" />
-                <button type="button" onclick="registerUser()" style="font-size: 1.2em; padding: 15px 30px;">Ro'yxatdan o'tish</button>
-            </form>
-        </div>
-        <div class="form-container sign-in-container">
-            <form action="./index.html">
-                <h2 class="brand-title"> <span>KIRISH</span></h2>
-                <div class="social-container">
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fab fa-instagram"></i></a>
-                        <span style="font-size: 1em;">Instagram</span>
-                    </div>
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fas fa-map-marker-alt"></i></a>
-                        <span style="font-size: 1em;">Manzil</span>
-                    </div>
-                    <div class="social-box">
-                        <a href="#" style="font-size: 1.5em;"><i class="fab fa-telegram"></i></a>
-                        <span style="font-size: 1em;">Telegram</span>
-                    </div>
-                </div>
-                <input type="text" id="loginUsername" placeholder="Foydalanuvchi nomi" style="font-size: 1.1em; padding: 12px;" />
-                <input type="password" id="loginPassword" placeholder="Parol" style="font-size: 1.1em; padding: 12px;" />
-                <a href="#" style="font-size: 1.1em;">Parolni unutdingizmi?</a>
-                <button type="button" onclick="loginUser()" style="font-size: 1.2em; padding: 15px 30px;">Kirish</button>
-            </form>
-        </div>
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-right">
-                    <div class="health-platform-icons">
-                        <div class="clinic-platform">
-                            <i class="fas fa-hospital-alt"></i>
-                            <span>Klinikalar</span>
-                        </div>
-                        <div class="doctor-platform">
-                            <i class="fas fa-user-md"></i>
-                            <span>Shifokorlar</span>
-                        </div>
-                        <div class="ai-trainer">
-                            <i class="fas fa-running"></i>
-                            <span> Mashg'ulotlar</span>
-                        </div>
-                        
-                        <div class="medical-ai">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>MedFit AI</span>
-                        </div>
-                        <div class="cybersecurity">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Kiberxavfsizlik</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h2 class="brand-title">MedFit <span>AI</span></h2>
+	<div class="container" id="container">
+		<div class="form-container sign-up-container">
+			<form action="#">
+				<h1 style="font-size: 2.5em;">Hisob yaratish</h1>
+				<div class="social-container">
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fab fa-facebook-f"></i></a>
+						<span style="font-size: 1.2em;">Facebook</span>
+					</div>
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fab fa-google-plus-g"></i></a>
+						<span style="font-size: 1.2em;">Google+</span>
+					</div>
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fab fa-linkedin-in"></i></a>
+						<span style="font-size: 1.2em;">LinkedIn</span>
+					</div>
+				</div>
+				<span style="font-size: 1.1em;">Yoki foydalanuvchi nomi bilan ro'yxatdan o'ting</span>
+				<input type="text" placeholder="Foydalanuvchi nomi" style="font-size: 1.1em; padding: 12px;" />
+				<input type="password" placeholder="Parol" style="font-size: 1.1em; padding: 12px;" />
+				<button type="button" onclick="registerUser()" style="font-size: 1.2em; padding: 15px 30px;">Ro'yxatdan o'tish</button>
+			</form>
+		</div>
+		<div class="form-container sign-in-container">
+			<form action="./index.html">
+				<h2 class="brand-title"> <span>KIRISH</span></h2>
+				<div class="social-container">
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fab fa-instagram"></i></a>
+						<span style="font-size: 1em;">Instagram</span>
+					</div>
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fas fa-map-marker-alt"></i></a>
+						<span style="font-size: 1em;">Manzil</span>
+					</div>
+					<div class="social-box">
+						<a href="#" style="font-size: 1.5em;"><i class="fab fa-telegram"></i></a>
+						<span style="font-size: 1em;">Telegram</span>
+					</div>
+				</div>
+				<input type="text" id="loginUsername" placeholder="Foydalanuvchi nomi" style="font-size: 1.1em; padding: 12px;" />
+				<input type="password" id="loginPassword" placeholder="Parol" style="font-size: 1.1em; padding: 12px;" />
+				<a href="#" style="font-size: 1.1em;">Parolni unutdingizmi?</a>
+				<button type="button" onclick="loginUser()" style="font-size: 1.2em; padding: 15px 30px;">Kirish</button>
+			</form>
+		</div>
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1 style="font-size: 2.2em;">Salom!</h1>
+					<p style="font-size: 1.1em;">Hisobingiz yo'qmi? Ro'yxatdan o'ting</p>
+					<button class="ghost" id="signUp" style="font-size: 1.2em; padding: 15px 30px;">Ro'yxatdan o'tish</button>
+				</div>
+				<div class="overlay-panel overlay-right">
+					<h2 class="brand-title" style="font-size: 2.9em;">MedFit <span>AI</span></h2>
+					<div class="health-platform-icons">
+						<div class="ai-trainer">
+							<i class="fas fa-dumbbell"></i>
+							<span>AI Fitness Trener</span>
+						</div>
+						<div class="ai-dietitian">
+							<i class="fas fa-utensils"></i>
+							<span>AI Dietolog</span>
+						</div>
+						<div class="ai-psychologist">
+							<i class="fas fa-brain"></i>
+							<span>Psixolog AI</span>
+						</div>
+						<div class="medical-ai">
+							<i class="fas fa-heartbeat"></i>
+							<span>Tibbiy AI</span>
+						</div>
+						<div class="cybersecurity">
+							<i class="fas fa-shield-alt"></i>
+							<span>Kiberxavfsizlik</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <script>
         const container = document.getElementById("container");
@@ -461,19 +464,20 @@
         });
 
         function loginUser() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            if (username === "wonderboy" && password === "1122") {
-                alert("✅Kirish muvaffaqiyatli!✅");
-                window.location.href = './index.html';
-            } else {
-                alert("❌Noto'g'ri foydalanuvchi nomi yoki parol");
-            }
-        }
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    if (username === "wonderboy" && password === "1122") {
+        alert("✅Kirish muvaffaqiyatli!✅");
+        window.location.href = 'asosiy.html';
+    } else {
+        alert("❌Noto'g'ri foydalanuvchi nomi yoki parol");
+    }
+}
 
-        function registerUser() {
-            alert("✅Ro'yxatdan o'tish muvofaqiyatli amalga oshirildi✅");
-        }
+function registerUser() {
+    alert("✅Ro'yxatdan o'tish muvofaqiyatli amalga oshirildi✅");
+}
+
     </script>
 </body>
 </html>

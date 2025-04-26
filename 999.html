@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Skelet Kuzatuv</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; background-color: black; color: white; }
+        video, canvas { position: absolute; left: 50%; transform: translateX(-50%); }
+        canvas { z-index: 10; }
+        video { display: none; }
+        #menu { margin-top: 20px; }
+        #menu button { background-color: #00FF00; color: white; padding: 10px 20px; margin: 5px; border: none; cursor: pointer; }
+        #menu button:hover { background-color: #007700; }
+        #counter { font-size: 24px; color: yellow; font-weight: bold; margin-top: 20px; }
+        #backBtn { margin-top: 20px; background-color: #FF4500; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        #backBtn:hover { background-color: #FF6347; }
+    </style>
+</head>
+<body>
+    <h2>🔍 AI Skelet Kuzatuv</h2>
+    <div id="menu">
+        <button onclick="startGantel()">🏋️ Gantel ko‘tarish</button>
+        <button onclick="startSquat()">🪑 O‘tirib-turish (Squat)</button>
+    </div>
+
+    <div id="counter">
+        <p>Mashq holati: <span id="status">Tayyor</span></p>
+        <p>Hisoblash: <span id="count">0</span></p>
+    </div>
+
+    <video id="video" width="640" height="480" autoplay playsinline></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <button id="backBtn" onclick="goBack()" style="display:none;">🔙 Ortga</button>
+
+    <script>
+        let video;
+        let model;
+        let isCounting = false;
+        let count = 0;
+        let mode = "";
+
+        async function setupCamera() {
+            video = document.getElementById("video");
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 640, height: 480 }
+            });
+            video.srcObject = stream;
+            return new Promise(resolve => { video.onloadedmetadata = () => resolve(video); });
+        }
+
+        async function loadModel() {
+            return await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+        }
+
+        function drawKeypoints(keypoints, ctx) {
+            ctx.fillStyle = "cyan";
+            keypoints.forEach(point => {
+                if (point.score > 0.5) {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 10, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function drawSkeleton(keypoints, ctx) {
+            const skeleton = [
+                [0, 1], [1, 3], [0, 2], [2, 4],
+                [5, 6], [5, 7], [7, 9], [6, 8], [8, 10],
+                [11, 12], [12, 14], [14, 16],
+                [11, 13], [13, 15], [5, 11], [6, 12]
+            ];
+
+            ctx.strokeStyle = "#00FF00";
+            ctx.lineWidth = 8;
+            ctx.globalAlpha = 0.8;
+
+            skeleton.forEach(([i, j]) => {
+                const a = keypoints[i];
+                const b = keypoints[j];
+                if (a.score > 0.5 && b.score > 0.5) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            });
+        }
+
+        async function detectPose(video, model, canvas, mode) {
+            const ctx = canvas.getContext("2d");
+            async function detect() {
+                const poses = await model.estimatePoses(video);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (poses.length > 0) {
+                    drawKeypoints(poses[0].keypoints, ctx);
+                    drawSkeleton(poses[0].keypoints, ctx);
+                    if (mode === "gant") {
+                        checkGantelForm(poses[0].keypoints, ctx); // Gantel holatini tekshirish
+                    } else if (mode === "squat") {
+                        checkSquatForm(poses[0].keypoints, ctx); // Utirib turish holatini tekshirish
+                    }
+                }
+
+                requestAnimationFrame(detect);
+            }
+            detect();
+        }
+
+        function startGantel() {
+            mode = "gant";
+            resetCounter();
+            showCamera();
+            setupPoseDetection();
+        }
+
+        function startSquat() {
+            mode = "squat";
+            resetCounter();
+            showCamera();
+            setupPoseDetection();
+        }
+
+        function resetCounter() {
+            count = 0;
+            isCounting = false;
+            document.getElementById("count").textContent = count;
+            document.getElementById("status").textContent = "Tayyor";
+        }
+
+        function updateCounter() {
+            document.getElementById("count").textContent = count;
+        }
+
+        function checkGantelForm(keypoints, ctx) {
+            const leftShoulder = keypoints[5];
+            const rightShoulder = keypoints[6];
+            const leftElbow = keypoints[7];
+            const rightElbow = keypoints[8];
+
+            if (!leftShoulder || !rightShoulder || !leftElbow || !rightElbow) return;
+
+            if (leftElbow.y < leftShoulder.y && rightElbow.y < rightShoulder.y) {
+                document.getElementById("status").textContent = "Gantel Ko'tarish: To'g'ri!";
+                if (!isCounting) {
+                    isCounting = true;
+                    count++;
+                    updateCounter();
+                }
+            } else {
+                document.getElementById("status").textContent = "Gantel Ko'tarish: Xato!";
+                isCounting = false;
+            }
+        }
+
+        let squatState = "standing"; // Boshlang'ich holat - tik turish
+
+        function checkSquatForm(keypoints, ctx) {
+            const hips = keypoints[11];
+            const knees = keypoints[13];
+
+            if (!hips || !knees) return;
+
+            // Tizzaning y koordinatasi sonnikidan past bo'lsa - o'tirish
+            if (knees.y > hips.y) {
+                if (squatState === "standing") {
+                    squatState = "sitting";
+                    document.getElementById("status").textContent = "Utirish";
+                    isCounting = false; // Yangi hisoblash sikli uchun tayyorlanish
+                }
+            }
+            // Tizzaning y koordinatasi sonnikidan yuqori bo'lsa - turish
+            else {
+                if (squatState === "sitting" && !isCounting) {
+                    squatState = "standing";
+                    document.getElementById("status").textContent = "Turish";
+                    count++;
+                    updateCounter();
+                    isCounting = true; // Hisoblandi, keyingi siklni kutamiz
+                } else if (squatState === "standing") {
+                    document.getElementById("status").textContent = "Tayyor";
+                }
+            }
+        }
+
+        async function setupPoseDetection() {
+            const video = await setupCamera();
+            const model = await loadModel();
+            const canvas = document.getElementById("canvas");
+            detectPose(video, model, canvas, mode);
+        }
+
+        function showCamera() {
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("backBtn").style.display = "inline";
+        }
+
+        function goBack() {
+            document.getElementById("menu").style.display = "block";
+            document.getElementById("backBtn").style.display = "none";
+            resetCounter();
+            const video = document.getElementById("video");
+            const stream = video.srcObject;
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+        }
+
+        setupPoseDetection();
+    </script>
+</body>
+</html>
