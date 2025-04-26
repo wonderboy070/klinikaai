@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erishgan Yutuqlari👨‍⚕️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #cfdadd, #e1e4e9); /* Chiroyli gradient fon */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ekranning kamida 100% balandligini egallaydi */
+            margin: 0;
+            font-family: Arial, sans-serif;
+            padding: 20px; /* Umumiy padding */
+            box-sizing: border-box; /* Padding va border element kengligiga kiritiladi */
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Oq fon */
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 95%; /* Kichik ekranlarda to'liq kenglik */
+            max-width: 800px; /* Katta ekranlarda maksimal kenglik */
+        }
+
+        h1 {
+            color: rgb(44, 41, 252);
+            font-size: 2rem; /* Kichikroq boshlang'ich shrift */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .certificates {
+            display: flex;
+            justify-content: center; /* Katta ekranlarda markazlash */
+            flex-wrap: wrap; /* Kichik ekranlarda bir qatorga o'tish */
+            gap: 15px; /* Sertifikatlar orasidagi masofa */
+            margin-top: 20px;
+        }
+
+        .certificate {
+            width: calc(50% - 10px); /* Ikkita ustun kichik ekranlarda */
+            text-align: center;
+        }
+
+        .certificate-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .certificate-img:hover {
+            transform: scale(1.05);
+        }
+
+        .modern-text {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 18px; /* Kichikroq shrift */
+            font-weight: 600;
+            color: #2c3e50;
+            background: #e0f7fa;
+            padding: 10px 15px; /* Kichikroq padding */
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 8px;
+        }
+
+        .modern-text:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        /* Kichik ekranlar uchun (telefonlar) */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .certificates {
+                flex-direction: column; /* Bir ustun */
+                align-items: center; /* Markazlash */
+            }
+            .certificate {
+                width: 80%; /* Kengroq kartochkalar */
+                margin-bottom: 15px;
+            }
+            .modern-text {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+        }
+
+        /* O'rta ekranlar uchun (planshetlar) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .certificate {
+                width: calc(50% - 10px); /* Ikkita ustun */
+            }
+            .modern-text {
+                font-size: 20px;
+                padding: 10px 15px;
+            }
+        }
+
+        /* Katta ekranlar uchun (kompyuterlar) */
+        @media (min-width: 901px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .certificates {
+                justify-content: center; /* Markazda joylashish */
+            }
+            .certificate {
+                width: 230px; /* Asl hajmdagi kartochkalar */
+            }
+            .modern-text {
+                font-size: 22px;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Erishgan Yutuqlari👨‍⚕️</h1>
+
+        <div class="certificates">
+            <div class="certificate">
+                <img src="s1.jpg" alt="Sertifikat 1" class="certificate-img">
+                <p class="modern-text">IBM Cybersecurity Analyst </p>
+            </div>
+            <div class="certificate">
+                <img src="s2.jpg" alt="Sertifikat 2" class="certificate-img">
+                <p class="modern-text">Learn English</p>
+            </div>
+            <div class="certificate">
+                <img src="s3.jpg" alt="Sertifikat 3" class="certificate-img">
+                <p class="modern-text"> Python 3 Programming</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sertifikatlar uchun hover effekti qo'shish (rasm kattalashishi)
+        const certificatesImg = document.querySelectorAll('.certificate-img');
+
+        certificatesImg.forEach(cert => {
+            cert.addEventListener('mouseover', () => {
+                cert.style.transform = 'scale(1.05)';
+            });
+
+            cert.addEventListener('mouseout', () => {
+                cert.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

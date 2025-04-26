@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Profi.uz – Professional xizmatlar</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid py-2 border-bottom d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-decoration-none text-body pe-3" href=""><i class="bi bi-telephone me-2"></i>+998(99) 123-45-67</a>
+                        <span class="text-body">|</span>
+                        <a class="text-decoration-none text-body px-3" href=""><i class="bi bi-envelope me-2"></i>info@example.com</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-lg-end">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-body px-2" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-body px-2" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-body px-2" href="">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-body px-2" href="">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a class="text-body ps-2" href="">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top bg-white shadow-sm mb-5">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+                <a href="index.html" class="navbar-brand d-flex align-items-center">
+                    <i class="fas fa-hospital fa-2x me-3 text-primary"></i> <!-- Iconni kattalashtirdim va bo'shliq qo'shdim -->
+                    <h1 class="m-0 text-uppercase text-primary" style="font-weight: 600; letter-spacing: 1px;">RAPID GROWTH</h1>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="index.html" class="nav-item nav-link">Bosh sahifa</a>
+                        <a href="about.html" class="nav-item nav-link">Biz haqimizda</a>
+                        <a href="service.html" class="nav-item nav-link active">Xizmatlar</a>
+                        
+                       
+                        <a href="./contact.html" class="nav-item nav-link">Contact</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+    
+
+    <div id="chatbot-icon" class="chatbot-button position-fixed bottom-0 end-0 mb-4 me-4">
+        <button class="btn btn-lg rounded-circle">
+            <i class="fas fa-comments text-white"></i>
+        </button>
+    </div>
+    
+    <div id="chatbot-window" class="chatbot-window position-fixed bottom-0 end-0 mb-4 me-4" style="display: none;">
+        <div class="chat-container" id="chat-container">
+            <div class="chat-header">
+                <span>🤖 AI Chat </span>
+                
+                <button id="close-chatbot" style="background: none; border: none; color: white; font-size: 1.2em; cursor: pointer; margin-left: auto;">&times;</button>
+            </div>
+            <div class="chat-box" id="chat-box">
+                <div class="message bot-message">🌍 Viloyatni tanlang | Choose a region | Выберите регион</div>
+                <div class="options">
+                    <button onclick="selectLanguage('Uzbek')">Uzbek</button>
+                    <button onclick="selectLanguage('English')">English</button>
+                    <button onclick="selectLanguage('Russian')">Russian</button>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            let step = 1;
+            let language = "";
+            let category = "";
+            let specialty = "";
+            let selectedPerson = "";
+            const chatBox = document.getElementById("chat-box");
+            const chatbotIcon = document.getElementById('chatbot-icon');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const closeChatbotButton = document.getElementById('close-chatbot');
+    
+            
+    
+            const translations = {
+            Uzbek: {
+                selectField: "Viloyatni tanlang",
+                specialties: "Klinikani tanlang",
+                selectExpert: "Mutaxassisni tanlang",
+                details: (name, clinic, experience, phone) =>
+                    `👤 Mutaxassis: ${name}\n📍 Ish joyi: ${clinic}\n📅 Tajriba: ${experience} yil\n📞 Telefon: ${phone}`,
+                restart: "🔄 Qayta boshlash",
+                fields: ["👨‍⚕️ Doktor"]
+            },
+            English: {
+                selectField: "Select a region",
+                specialties: "Choose a clinic",
+                selectExpert: "Select an expert",
+                details: (name, clinic, experience, phone) =>
+                    `👤 Expert: ${name}\n📍 Workplace: ${clinic}\n📅 Experience: ${experience} years\n📞 Phone: ${phone}`,
+                restart: "🔄 Restart",
+                fields: ["👨‍⚕️ Doctor"]
+            },
+            Russian: {
+                selectField: "Выберите регион",
+                specialties: "Выберите клинику",
+                selectExpert: "Выберите специалиста",
+                details: (name, clinic, experience, phone) =>
+                    `👤 Специалист: ${name}\n📍 Место работы: ${clinic}\n📅 Опыт: ${experience} лет\n📞 Телефон: ${phone}`,
+                restart: "🔄 Начать заново",
+                fields: ["👨‍⚕️ Врач"]
+            }
+        };
+
+        const regionsData = {
+    "Toshkent": {
+        clinics: {
+            "Saxovat Klinikasi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Ismoilov Otabek", "Dr. Alimov Shavkat", "Dr. Dilnoza Abdukarimova"],
+                    "Nevrolog": ["Dr. Karimova Dilnoza", "Dr. Farhod Mahmudov", "Dr. Sevara G'anieva"],
+                    "Pediatr": ["Dr. Dilshodbek Ergashev", "Dr. Bahodir Ahmedov", "Dr. Ziyoda Karimova"]
+                }
+            },
+            "Medion Klinikasi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Sanjar Olimov", "Dr. Madina Rasulova", "Dr. Ulug'bek Nazarov"],
+                    "Nevrolog": ["Dr. Jamshid Karimov", "Dr. Alisher Raximov", "Dr. Nodir Sodiqov"],
+                    "Pediatr": ["Dr. Dildora Khamroeva", "Dr. Azizbek Komilov", "Dr. Sevara G'anieva"]
+                }
+            },
+            "Toshkent Markaziy Klinikasi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Otabek Azizov", "Dr. Shodiyor Khamidov", "Dr. Gulnoza Karimova"],
+                    "Nevrolog": ["Dr. Sherzodbek Murodov", "Dr. Zafarbek Sirojov", "Dr. Dilshodbek Saidov"],
+                    "Pediatr": ["Dr. Farhodbek Sattorov", "Dr. Zukhra Abdurahmonova", "Dr. Abdurahmonov Dilshod"]
+                }
+            }
+        }
+    },
+    "Andijon": {
+        clinics: {
+            "Salomatlik Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Bahodir Ahmedov", "Dr. Nargiza To'xtasinova", "Dr. Dilnoza Abdukarimova"],
+                    "Nevrolog": ["Dr. Akmal Rashidov", "Dr. Farhodbek Khamroev", "Dr. Shahrizoda Uralova"],
+                    "Pediatr": ["Dr. Jamshid Murodov", "Dr. Mohira Yusupova", "Dr. Sanjarbek Raximov"]
+                }
+            },
+            "Shifo Maskani": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Dilshodbek Abdurahmonov", "Dr. Nodira Murodova", "Dr. Ziyoda Sattarova"],
+                    "Nevrolog": ["Dr. Otabek Mamatov", "Dr. Shodibek Nizomov", "Dr. Guliya Yusupova"],
+                    "Pediatr": ["Dr. Anvarbek Raxmonov", "Dr. Rafiga Qodirova", "Dr. Nargiza Tashkentova"]
+                }
+            },
+            "Andijon Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Azizbek Usmonov", "Dr. Bahodir Ahmedov", "Dr. Dilfuza Qodirova"],
+                    "Nevrolog": ["Dr. Sanjarbek Murodov", "Dr. Farhodbek Shodiev", "Dr. Nargiza Tashkentova"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Sanjarbek Qodirov", "Dr. Ziyoda Khamrova"]
+                }
+            }
+        }
+    },
+    "Buxoro": {
+        clinics: {
+            "Sog'lom Hayot": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farrukh Islomov", "Dr. Dilnoza Karimova", "Dr. Azizbek Qodirov"],
+                    "Nevrolog": ["Dr. Shokirbek Murodov", "Dr. Nargiza Uralova", "Dr. Farhodbek Shamsiev"],
+                    "Pediatr": ["Dr. Mohira Khamidova", "Dr. Jamshidbek Otajonov", "Dr. Sanjarbek Mamatov"]
+                }
+            },
+            "Shifo Buloqlari": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya G'anieva", "Dr. Otabek Mamatov", "Dr. Dildora Yusupova"],
+                    "Nevrolog": ["Dr. Akmalbek Tashkentov", "Dr. Amina Usmonova", "Dr. Sherzodbek Murodov"],
+                    "Pediatr": ["Dr. Dilshodbek Shovkatov", "Dr. Zukhra Abdukarimova", "Dr. Sanjarbek G'aniev"]
+                }
+            },
+            "Buxoro Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Shahrizoda Otabekova", "Dr. Farhodbek Saidov", "Dr. Gulnoza Murodv"],
+                    "Nevrolog": ["Dr. Bahrombek Qodirov", "Dr. Akmalbek Murodov", "Dr. Dildora Qodirova"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Sanjarbek Qodirov", "Dr. Ziyoda Khamrova"]
+                }
+            }
+        }
+    },
+    "Farg'ona": {
+        clinics: {
+            "Vodiy Tibbiyot": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Ahrorbek Tashkentov", "Dr. Dilfuza Khamidova", "Dr. Sanjarbek Raximov"],
+                    "Nevrolog": ["Dr. Farhodbek Raximov", "Dr. Mohira Nurmatova", "Dr. Azizbek Shukurov"],
+                    "Pediatr": ["Dr. Ziyoda Qodirova", "Dr. Jamshidbek Murodov", "Dr. Dilshodbek Abdurahmonov"]
+                }
+            },
+            "Sog'lom Kelajak": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Bahodirbek Shamsiev", "Dr. Nodira Khamidova", "Dr. Gulnoza Nizomova"],
+                    "Nevrolog": ["Dr. Sherzodbek Murodov", "Dr. Akmalbek Qodirov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Shodirova", "Dr. Sanjarbek Qodirov", "Dr. Ziyoda Abdullayeva"]
+                }
+            },
+            "Farg'ona Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Tashkentova", "Dr. Dilshodbek Islomov", "Dr. Farhodbek Shamsiev"],
+                    "Nevrolog": ["Dr. Akmalbek Raximov", "Dr. Bahodirbek Murodov", "Dr. Shahrizoda Khamidova"],
+                    "Pediatr": ["Dr. Mohira Qodirova", "Dr. Sanjarbek Qodirov", "Dr. Ziyoda Abdurahmonova"]
+                }
+            }
+        }
+    },
+    "Jizzax": {
+        clinics: {
+            "Zomin Shifo": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Dilshodbek Shovkatov", "Dr. Shahrizoda Khamidova", "Dr. Bahodirbek Raximov"],
+                    "Nevrolog": ["Dr. Amina Abdurahmonova", "Dr. Sanjarbek Murodov", "Dr. Farhodbek Azizov"],
+                    "Pediatr": ["Dr. Mohira Shamsiev", "Dr. Zukhra Karimova", "Dr. Azizbek Qodirov"]
+                }
+            },"Do'stlik Madad": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Otabek Mamatov", "Dr. Dildora Qodirova", "Dr. Farhodbek Usmonov"],
+                    "Nevrolog": ["Dr. Gulnoza Khamidova", "Dr. Bahodir Shodiev", "Dr. Sanjarbek Murodov"],
+                    "Pediatr": ["Dr. Ziyoda Abdurahmonova", "Dr. Dilshodbek Abdurrahmonov", "Dr. Mohira Qodirova"]
+                }
+            },
+            "Jizzax Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Shahrizoda Murodova", "Dr. Sanjarbek Islomov", "Dr. Dilshodbek Khamidov"],
+                    "Nevrolog": ["Dr. Akmalbek Raximov", "Dr. Bahodirbek Raximov", "Dr. Zukhra Qodirova"],
+                    "Pediatr": ["Dr. Mohira Shamsiev", "Dr. Dilshodbek Tashkentov", "Dr. Amina Abdurahmonova"]
+                }
+            }
+        }
+    },
+    "Xorazm": {
+        clinics: {
+            "Urganch Med Service": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Akmalbek Islomov", "Dr. Gulnoza Abdurahmonova", "Dr. Sherzodbek Murodov"],
+                    "Nevrolog": ["Dr. Farhodbek Khamidov", "Dr. Dilshodbek Uralov", "Dr. Mohira Qodirova"],
+                    "Pediatr": ["Dr. Ziyoda Raximova", "Dr. Jamshidbek Murodov", "Dr. Zukhra Shamsiev"]
+                }
+            },
+            "Xiva Shifo": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Bahodirbek Murodov", "Dr. Sanjarbek Qodirov", "Dr. Amina Khamidova"],
+                    "Nevrolog": ["Dr. Mohira Abdullaeva", "Dr. Dilshodbek Shovkatov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Zukhra Karimova", "Dr. Akmalbek Abdullayev", "Dr. Shahrizoda Qodirova"]
+                }
+            },
+            "Xorazm Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Otabek Shamsiev", "Dr. Zulfiya Abdurrahmonova", "Dr. Amina Qodirova"],
+                    "Nevrolog": ["Dr. Farhodbek Raximov", "Dr. Shokirbek Khamidov", "Dr. Sanjarbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Shamsiev", "Dr. Ziyoda Khamidova", "Dr. Dilshodbek Qodirov"]
+                }
+            }
+        }
+    },
+    "Namangan": {
+        clinics: {
+            "Namangan Med Center": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Akmalbek Islomov", "Dr. Farhodbek Abdullayev", "Dr. Gulnoza Raximova"],
+                    "Nevrolog": ["Dr. Shahrizoda Khamidova", "Dr. Zukhra Qodirova", "Dr. Bahodirbek Shavkatov"],
+                    "Pediatr": ["Dr. Dilshodbek Rahmonov", "Dr. Mohira Shamsiev", "Dr. Sanjarbek Qodirov"]
+                }
+            },
+            "Chortoq Shifo": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farhodbek Murodov", "Dr. Otabek Qodirov", "Dr. Dilshodbek Khamidov"],
+                    "Nevrolog": ["Dr. Amina Abdurahmonova", "Dr. Zukhra Karimova", "Dr. Shahrizoda Islomova"],
+                    "Pediatr": ["Dr. Mohira Tashkentova", "Dr. Sanjarbek Shamsiev", "Dr. Bahodirbek Khamidov"]
+                }
+            },
+            "Namangan Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Qodirova", "Dr. Akmalbek Murodov", "Dr. Dilshodbek Shavkatov"],
+                    "Nevrolog": ["Dr. Farhodbek Raximov", "Dr. Shahrizoda Khamidova", "Dr. Zukhra Abdurrahmonova"],
+                    "Pediatr": ["Dr. Mohira Islomova", "Dr. Sanjarbek Qodirov", "Dr. Bahodir Murodov"]
+                }
+            }
+        }
+    },
+    "Navoiy": {
+        clinics: {
+            "Navoiy Tibbiyot Majmuasi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Bahodirbek Murodov", "Dr. Zukhra Khamidova", "Dr. Sanjarbek Qodirov"],
+                    "Nevrolog": ["Dr. Dilshodbek Islomov", "Dr. Amina Qodirova", "Dr. Farhodbek Raximov"],
+                    "Pediatr": ["Dr. Mohira Karimova", "Dr. Akmalbek Raximov", "Dr. Farhodbek Murodov"]
+                }
+            },
+            "Zarafshon Salomatlik": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Shahrizoda Qodirova", "Dr. Zulfiya Islomova", "Dr. Bahodirbek Shamsiev"],
+                    "Nevrolog": ["Dr. Akmalbek Murodov", "Dr. Sanjarbek Rahmonov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Khamidova", "Dr. Zukhra Qodirova", "Dr. Dilshodbek Qodirov"]
+                }
+            },
+            "Navoiy Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Amina Abdurrahmonova", "Dr. Farhodbek Murodov", "Dr. Zulfiya Karimova"],
+                    "Nevrolog": ["Dr. Bahodirbek Raximov", "Dr. Shahrizoda Khamidova", "Dr. Sanjarbek Qodirov"],
+                    "Pediatr": ["Dr. Mohira Tashkentova", "Dr. Zukhra Qodirova", "Dr. Dilshodbek Murodov"]
+                }
+            }
+        }
+    },
+    "Qashqadaryo": {
+        clinics: {
+            "Qarshi Med Center": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Akmalbek Raximov", "Dr. Bahodirbek Murodov", "Dr. Zukhra Khamidova"],
+                    "Nevrolog": ["Dr. Sanjarbek Qodirov", "Dr. Dilshodbek Rahmonov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Shahrizoda Islomova", "Dr. Amina Tashkentova"]
+                }
+            },
+            "Shahrisabz Shifo": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farhodbek Murodov", "Dr. Bahodirbek Raximov", "Dr. Zukhra Qodirova"],
+                    "Nevrolog": ["Dr. Dilshodbek Khamidov", "Dr. Mohira Islomova", "Dr. Akmalbek Raximov"],
+                    "Pediatr": ["Dr. Shahrizoda Qodirova", "Dr. Sanjarbek Murodov", "Dr. Anvarbek Khamidov"]
+                }
+            },
+            "Qashqadaryo Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Qodirova", "Dr. Akmalbek Murodov", "Dr. Farhodbek Shamsiev"],
+                    "Nevrolog": ["Dr. Sanjarbek Raximov", "Dr. Zukhra Karimova", "Dr. Dilshodbek Raximov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Bahodirbek Murodov", "Dr. Shahrizoda Qodirova"]
+                }
+            }
+        }
+    },
+    "Samarqand": {
+        clinics: {
+            "Samarqand Markaziy Poliklinika": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Otabek Qodirov", "Dr. Farhodbek Murodov", "Dr. Zukhra Khamidova"],
+                    "Nevrolog": ["Dr. Shahrizoda Khamidova", "Dr. Akmalbek Raximov", "Dr. Bahodirbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Abdullayeva", "Dr. Sanjarbek Qodirov", "Dr. Dilshodbek Khamidov"]
+                }
+            },
+            "Shifobaxsh Zamin": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Khamidova", "Dr. Otabek Shamsiev", "Dr. Bahodir Raximov"],
+                    "Nevrolog": ["Dr. Akmalbek Raximov", "Dr. Sanjarbek Islomov", "Dr. Zukhra Qodirova"],
+                    "Pediatr": ["Dr. Mohira Shodirova", "Dr. Dilshodbek Abdurahmonov", "Dr. Anvarbek Khamidov"]
+                }
+            },
+            "Samarqand Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farhodbek Murodov", "Dr. Zukhra Abdurahmonova", "Dr. Shahrizoda Khamidova"],
+                    "Nevrolog": ["Dr. Akmalbek Murodov", "Dr. Bahodirbek Raximov", "Dr. Mohira Qodirova"],
+                    "Pediatr": ["Dr. Dilshodbek Islomov", "Dr. Sanjarbek Qodirov", "Dr. Amina Khamidova"]
+                }
+            }
+        }
+    },
+    "Sirdaryo": {
+        clinics: {
+            "Guliston Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Akmalbek Islomov", "Dr. Bahodirbek Raximov", "Dr. Zukhra Khamidova"],
+                    "Nevrolog": ["Dr. Sanjarbek Qodirov", "Dr. Dilshodbek Rahmonov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Shahrizoda Islomova", "Dr. Amina Tashkentova"]
+                }
+            },
+            "Yangiyer Shifo Maskani": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farhodbek Murodov", "Dr. Bahodirbek Murodov", "Dr. Zukhra Qodirova"],
+                    "Nevrolog": ["Dr. Dilshodbek Khamidov", "Dr. Mohira Islomova", "Dr. Akmalbek Raximov"],
+                    "Pediatr": ["Dr. Shahrizoda Qodirova", "Dr. Sanjarbek Murodov", "Dr. Anvarbek Khamidov"]
+                }
+            },
+            "Sirdaryo Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Qodirova", "Dr. Akmalbek Murodov", "Dr. Farhodbek Shamsiev"],
+                    "Nevrolog": ["Dr. Sanjarbek Raximov", "Dr. Zukhra Karimova", "Dr. Dilshodbek Raximov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Bahodirbek Murodov", "Dr. Shahrizoda Qodirova"]
+                }
+            }
+        }
+    },
+    "Surxondaryo": {
+        clinics: {
+            "Termiz Med Service": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Akmalbek Raximov", "Dr. Bahodirbek Murodov", "Dr. Zukhra Khamidova"],
+                    "Nevrolog": ["Dr. Sanjarbek Qodirov", "Dr. Dilshodbek Rahmonov", "Dr. Farhodbek Murodov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Shahrizoda Khamidova", "Dr. Anvarbek Khamidov"]
+                }
+            },
+            "Denov Shifo": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Farhodbek Murodov", "Dr. Bahodirbek Raximov", "Dr. Zukhra Qodirova"],
+                    "Nevrolog": ["Dr. Dilshodbek Khamidov", "Dr. Mohira Islomova", "Dr. Akmalbek Raximov"],
+                    "Pediatr": ["Dr. Shahrizoda Qodirova", "Dr. Sanjarbek Murodov", "Dr. Amina Tashkentova"]
+                }
+            },
+            "Surxondaryo Tibbiyot Markazi": {
+                specialties: ["Terapevt", "Nevrolog", "Pediatr"],
+                doctors: {
+                    "👨‍⚕️ Doktor": ["Dr. Zulfiya Qodirova", "Dr. Akmalbek Murodov", "Dr. Farhodbek Shamsiev"],
+                    "Nevrolog": ["Dr. Sanjarbek Raximov", "Dr. Zukhra Karimova", "Dr. Dilshodbek Raximov"],
+                    "Pediatr": ["Dr. Mohira Abdurahmonova", "Dr. Bahodirbek Murodov", "Dr. Shahrizoda Qodirova"]
+                }
+            }
+        }
+    }
+};
+    
+            function selectLanguage(lang) {
+                language = lang;
+                step = 2;
+                updateChat(translations[lang].selectField, Object.keys(regionsData));
+            }
+    
+            function handleOptionClick(option) {
+                if (step === 2) {
+                    category = option;
+                    step = 3;
+                    const clinics = regionsData[category].clinics;
+                    updateChat(translations[language].specialties, Object.keys(clinics));
+                } else if (step === 3) {
+                    specialty = option;
+                    step = 4;
+    
+                    const selectedClinics = regionsData[category].clinics;
+                    const specialties = selectedClinics[option].doctors[translations[language].fields[0]];
+                    updateChat(translations[language].selectExpert, specialties);
+                } else if (step === 4) {
+                    selectedPerson = option;
+    
+                    const selectedClinicName = specialty;
+                    const experience = "10"; // Example experience
+                    const phone = "+998 90 123 45 67"; // Example phone number
+    
+                    const expertDetails = translations[language].details(selectedPerson, selectedClinicName, experience, phone);
+                    chatBox.innerHTML += `<div class="message bot-message">${expertDetails}</div>`;
+    
+                    const restartButton = `<button onclick="resetChat()">${translations[language].restart}</button>`;
+                    chatBox.innerHTML += `<div class="options">${restartButton}</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            }
+    
+            function updateChat(message, options) {
+                chatBox.innerHTML += `<div class="message user-message">${message}</div>`;
+                const buttons = options.map(opt => `<button onclick="handleOptionClick('${opt}')">${opt}</button>`).join("");
+                chatBox.innerHTML += `<div class="options">${buttons}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+    
+            function resetChat() {
+                step = 1;
+                chatBox.innerHTML = `<div class="message bot-message">🌍 Viloyatni tanlang | Choose a region | Выберите регион</div>
+                        <div class="options">
+                            <button onclick="selectLanguage('Uzbek')">Uzbek</button>
+                            <button onclick="selectLanguage('English')">English</button>
+                            <button onclick="selectLanguage('Russian')">Russian</button>
+                        </div>`;
+            }
+    
+            chatbotIcon.addEventListener('click', function () {
+                chatbotWindow.style.display = chatbotWindow.style.display === 'none' ? 'block' : 'none';
+            });
+    
+            closeChatbotButton.addEventListener('click', function() {
+                chatbotWindow.style.display = 'none';
+            });
+        </script>
+    </div>
+    
+    <style>
+        .chatbot-button button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+    
+        .chatbot-button button:hover {
+            transform: translateY(-2px);
+        }
+    
+        #chatbot-window {
+            bottom: 90px;
+            max-width: 350px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+    
+        .chat-container {
+            background: #f9f9f9;
+            border-radius: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    
+        .chat-header {
+    background: linear-gradient(to right, #6366f1, #4f46e5); /* Gradient fon */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Yengil soya */
+}
+
+.chat-header span {
+    font-size: 1.6em;
+    margin-right: 10px;
+    animation: pulse 1.5s infinite;
+    font-size: 1.5em;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+    
+        .chat-box {
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .message {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            clear: both;
+            font-size: 0.95em;
+        }
+    
+        .user-message {
+            background-color: #e0f2fe;
+            color: #0d47a1;
+            text-align: right;
+            float: right;
+        }
+    
+        .bot-message {
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: left;
+            float: left;
+        }
+    
+        .options {
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-top: 1px solid #e5e7eb;
+        }
+    
+        .options button {
+            background-color: #fff;
+            color: #4f46e5;
+            border: 1px solid #4f46e5;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+    
+        .options button:hover {
+            background-color: #4f46e5;
+            color: white;
+        }
+    
+        .chat-header button#close-chatbot {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 0;
+        }
+    
+        .chat-header button#close-chatbot:hover {
+            opacity: 0.8;
+        }
+    </style>
+    
+
+    <!-- Services Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                <h1 class="d-inline-block text-primary text-uppercase border-bottom border-5">Bizning xizmatlar</h1>
+                
+            </div>
+            <style>
+            .content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 20px;
+                padding: 20px;
+              }
+              
+              .card {
+                background: #fff;
+                width: 300px;
+                margin: 10px;
+                padding: 25px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+                border-radius: 10px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                
+                &:hover {
+                  transform: translateY(-10px);
+                  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+                }
+              
+                .service-icon {
+                  color:#13C5DD;
+                  font-size: 120px;
+                  text-align: center;
+                  transition: transform 0.5s ease;
+              
+                  &:hover {
+                    transform: translateY(-10px);
+                  }
+                }
+              
+                .info {
+                  text-align: center;
+              
+                  h3 {
+                    color: #1D2A4D;
+                    font-size: 20px;
+                    font-weight: 700;
+                    margin: 10px 0;
+                  }
+              
+                  .title {
+                    a {
+                      display: inline-block;
+                      padding: 10px 20px;
+                      background: crimson;
+                      color: white;
+                      text-decoration: none;
+                      border-radius: 5px;
+                      transition: background 0.3s ease;
+              
+                      &:hover {
+                        background: #fff;
+                        color:#1D2A4D;
+                      }
+                    }
+                  }
+                }
+              }</style>
+              
+            <div class="content">
+                <div class="card reveal">
+                  <div class="service-icon">
+                    <i class="fas fa-hospital-alt"></i>
+                  </div>
+                  <div class="info">
+                    <h3>🏥 Klinikalar</h3>
+                    <div class="title reveal">
+                      <a href="./klinika.html" class="btn">Kirish</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card reveal">
+                    <div class="service-icon">
+                      <i class="fas fa-robot"></i> <!-- Robot ikonkasi -->
+                    </div>
+                    <div class="info">
+                      <h3>🤖 MedFit Ai</h3>
+                      <div class="title reveal">
+                        <a href="./login copy 3.html" class="btn">Kirish</a>
+                      </div>
+                    </div>
+                  </div>
+                  
+
+
+<!-- Tayinlash Start -->
+<!-- Tayinlash End -->
+
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+            <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Fikrlar</h5>
+            
+        </div>
+
+        <!-- ✅ Carousel -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="owl-carousel testimonial-carousel">
+                    <!-- Avvalgi fikrlar -->
+                    <div class="testimonial-item text-center">
+                        <div class="position-relative mb-5">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="position-relative mb-5">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <!-- Ikonka o‘rnatildi -->
+                                        <i class="fa fa-user-circle fa-5x text-primary"></i>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <p class="fs-4 fw-normal">Xizmatdan juda mamnunman! Yana murojaat qilaman.</p>
+                        <hr class="w-25 mx-auto">
+                        <h3>Shaxnoza</h3>
+                        <h6 class="fw-normal text-primary mb-3">Talaba</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Carousel Navigation Buttons (Oldingi & Keyingi) with Icons -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 text-center">
+                <button id="prevBtn" class="btn btn-outline-primary me-3">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button id="nextBtn" class="btn btn-outline-primary">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ✅ Fikr qo‘shish formasi -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <h4 class="text-center mb-3">Fikringizni qoldiring</h4>
+                <form id="testimonialForm">
+                    <input type="text" id="name" placeholder="Ismingiz" class="form-control mb-2" required>
+                    <input type="text" id="job" placeholder="Kasbingiz" class="form-control mb-2" required>
+                    <textarea id="message" placeholder="Fikringiz" class="form-control mb-3" rows="3" required></textarea>
+                    <button type="submit" class="btn btn-primary w-100">Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ JQuery + Owl Carousel JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const $carousel = $('.testimonial-carousel');
+
+        // 🌀 Carousel sozlamalari
+        $carousel.owlCarousel({
+            autoplay: true,
+            smartSpeed: 1000,
+            center: true,
+            dots: true,
+            loop: true,
+            items: 1
+        });
+
+        // 🔁 Saqlangan fikrlarni localStorage orqali yuklash
+        const savedTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
+
+        savedTestimonials.forEach((item, index) => {
+            const newItem = generateTestimonialItem(item.name, item.job, item.message, index);
+            $carousel.trigger('add.owl.carousel', [$(newItem)]).trigger('refresh.owl.carousel');
+        });
+
+        // 📝 Fikr formasi jo‘natilganda
+        $('#testimonialForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const name = $('#name').val().trim();
+            const job = $('#job').val().trim();
+            const message = $('#message').val().trim();
+
+            if (!name || !job || !message) return;
+
+            const newItem = generateTestimonialItem(name, job, message, savedTestimonials.length);
+
+            // Carouselga qo‘shish
+            $carousel.trigger('add.owl.carousel', [$(newItem)]).trigger('refresh.owl.carousel');
+
+            // Slaydni keyingisiga o‘tkazish
+            setTimeout(() => {
+                $carousel.trigger('next.owl.carousel');
+            }, 300); // biroz kechikish
+
+            // LocalStorage ga saqlash
+            savedTestimonials.push({ name, job, message });
+            localStorage.setItem('testimonials', JSON.stringify(savedTestimonials));
+
+            // Formani tozalash
+            $('#testimonialForm')[0].reset();
+        });
+
+        // ⬅️➡️ Navigatsiya tugmalari
+        $('#prevBtn').click(() => $carousel.trigger('prev.owl.carousel'));
+        $('#nextBtn').click(() => $carousel.trigger('next.owl.carousel'));
+
+        // 🧩 Yordamchi funksiya
+        function generateTestimonialItem(name, job, message, index) {
+            return `
+                <div class="testimonial-item text-center">
+                    <div class="position-relative mb-5">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <!-- Ikonka o‘rnatildi -->
+                            <i class="fa fa-user-circle fa-5x text-primary"></i>
+                        </div>
+
+                        
+                    </div>
+                    <p class="fs-4 fw-normal">${message}</p>
+                    <hr class="w-25 mx-auto">
+                    <h3>${name}</h3>
+                    <h6 class="fw-normal text-primary mb-3">${job}</h6>
+                    <button class="btn btn-danger delete-btn" data-index="${index}">O'chirish</button>
+                </div>`; 
+        }
+
+        // 🔴 O'chirish tugmasini bosish
+        $(document).on('click', '.delete-btn', function () {
+            const index = $(this).data('index');
+            const updatedTestimonials = savedTestimonials.filter((_, i) => i !== index);
+
+            // LocalStorage-dan o'chirish
+            localStorage.setItem('testimonials', JSON.stringify(updatedTestimonials));
+            
+            // Carouseldan testimonialni olib tashlash
+            $(this).closest('.testimonial-item').remove();
+
+            // Fikrlarni yangilash
+            savedTestimonials.length = 0; // Clear existing array
+            savedTestimonials.push(...updatedTestimonials); // Push the updated array
+        });
+    });
+</script>
+<script>
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+
+    
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

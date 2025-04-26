@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Panel - Uchrashuvlar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .bg-admin {
+            background-color: #dfdfdf;
+        }
+        .text-admin {
+            color: #ffffff;
+        }
+        .btn-admin {
+            background-color: #007bff;
+            color: white;
+        }
+        .icon-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .icon-container i {
+            color: #007bff; /* Ikonka rangini o'zgartirish */
+        }
+        .icon-container i:hover {
+            color: crimson; /* Sichqoncha ustiga kelganda rangni o'zgartirish */
+        }
+        .btn-danger:hover {
+  background-color: #fafafa; /* A slightly darker shade of the original red */
+  color: crimson; /* Keep the text white or change if needed */
+  /* You can add other effects like: */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); */
+  /* transform: translateY(-2px); */
+  /* border-color: #b21f2d; */
+}
+    </style>
+</head>
+<body>
+<div class="container-fluid bg-admin py-5">
+    <div class="container">
+        <h2 class="text-center text-admin mb-4">📋 Uchrashuvlar Ro'yxati</h2>
+
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <button class="btn btn-admin" onclick="window.location.href='index.html'">🔙 Asosiy Sahifaga</button>
+            </div>
+            <div>
+                <button class="btn btn-admin" onclick="downloadPDF()">📄 PDF yuklab olish</button>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <div class="icon-container mb-4">
+                <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-map-marker-alt fa-2x"></i>
+                    <select id="adminViloyat" class="form-select mb-3">
+                        <option selected>Viloyatni tanlang</option>
+                        <option value="Toshkent">Toshkent</option>
+                        <option value="Samarqand">Samarqand</option>
+                        <option value="Andijon">Andijon</option>
+                    </select>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-clinic-medical fa-2x"></i>
+                    <select id="adminKlinika" class="form-select mb-3">
+                        <option selected>Klinikani tanlang</option>
+                    </select>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-stethoscope fa-2x"></i>
+                    <select id="adminBolim" class="form-select mb-3">
+                        <option selected>Bo'limni tanlang</option>
+                        <option value="Pediatr">Pediatr</option>
+                        <option value="Kardiolog">Kardiolog</option>
+                        <option value="Nevropatolog">Nevropatolog</option>
+                    </select>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-user-md fa-2x"></i>
+                    <select id="adminDoktor" class="form-select mb-3">
+                        <option selected>Doktorni tanlang</option>
+                    </select>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-calendar-alt fa-2x"></i>
+                    <input type="date" id="adminSana" class="form-control mb-3">
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>#</th>
+                <th>Viloyat</th>
+                <th>Klinika</th>
+                <th>Bo'lim</th>
+                <th>Doktor</th>
+                <th>Ism</th>
+                <th>Telefon</th>
+                <th>Sana</th>
+                <th>Vaqt</th>
+                <th>Ro'yxatdan o'tish vaqti</th>
+                <th>Amallar</th>
+            </tr>
+            </thead>
+            <tbody id="appointmentList">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.17/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+    const klinikalar = {
+        "Toshkent": ["Toshkent Markaziy Klinika", "Shox Med", "Grand Med"],
+        "Samarqand": ["Samarqand Shifoxonasi", "Imkon Med", "Samarqand Diagnostika"],
+        "Andijon": ["Andijon Davlat Klinika", "Shifo Med", "Andijon Med Service"]
+    };
+
+    const doktorlar_bazasi_filter = {
+        "Toshkent": {
+            "Toshkent Markaziy Klinika": {
+                "Pediatr": ["Alijon Aliyev", "Gulnora Karimova"],
+                "Kardiolog": ["Botir Rahimov", "Zilola Sobirova"],
+                "Nevropatolog": ["Sanjar Valiev", "Nargiza To'rayeva"]
+            },
+            "Shox Med": {
+                "Pediatr": ["Dilshod Komilov"],
+                "Kardiolog": ["Feruza Azizova"],
+                "Nevropatolog": ["Rustam Haydarov"]
+            },
+            "Grand Med": {
+                "Pediatr": ["Madina Saidova"],
+                "Kardiolog": ["Akmal Umarov"],
+                "Nevropatolog": ["Shohruh Qodirov"]
+            }
+        },
+        "Samarqand": {
+            "Samarqand Shifoxonasi": {
+                "Pediatr": ["Olimjon Sattorov"],
+                "Kardiolog": ["Nodir Abdullayev"],
+                "Nevropatolog": ["Sevara G'afforova"]
+            },
+            "Imkon Med": {
+                "Pediatr": ["Laylo Hamidova"],
+                "Kardiolog": ["Javohir Eshonov"]
+            },
+            "Samarqand Diagnostika": {
+                "Nevropatolog": ["Muhiddin Ziyayev"]
+            }
+        },
+        "Andijon": {
+            "Andijon Davlat Klinika": {
+                "Pediatr": ["Mahmud To'xtayev"],
+                "Kardiolog": ["Komil Siddiqov"],
+                "Nevropatolog": ["Dilfuza Ergasheva"]
+            },
+            "Shifo Med": {
+                "Pediatr": ["Zuhra Abdiyeva"]
+            },
+            "Andijon Med Service": {
+                "Kardiolog": ["Ravshan Jo'rayev"],
+                "Nevropatolog": ["Barno Karimova"]
+            }
+        }
+    };
+
+    function loadAppointments() {
+        const appointmentList = document.getElementById('appointmentList');
+        appointmentList.innerHTML = '';
+
+        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+
+        const viloyatFilter = document.getElementById('adminViloyat').value;
+        const klinikaFilter = document.getElementById('adminKlinika').value;
+        const bolimFilter = document.getElementById('adminBolim').value;
+        const doktorFilter = document.getElementById('adminDoktor').value;
+        const sanaFilter = document.getElementById('adminSana').value;
+
+        if (appointments.length === 0) {
+            appointmentList.innerHTML = '<tr><td colspan="11" class="text-center text-danger">📌 Hali hech qanday uchrashuv mavjud emas.</td></tr>';
+            return;
+        }
+
+        appointments = appointments.filter(appointment => {
+            const sanaMos = sanaFilter ? appointment.sana === sanaFilter : true;
+
+            return (viloyatFilter === "Viloyatni tanlang" || appointment.viloyat === viloyatFilter) &&
+                   (klinikaFilter === "Klinikani tanlang" || appointment.klinika === klinikaFilter) &&
+                   (bolimFilter === "Bo'limni tanlang" || appointment.bolim === bolimFilter) &&
+                   (doktorFilter === "Doktorni tanlang" || appointment.doktor === doktorFilter) &&
+                   sanaMos;
+        });
+
+        // Sana va vaqt bo'yicha tartiblash
+        appointments.sort((a, b) => {
+            const dateA = new Date(`${a.sana}T${a.vaqt}`);
+            const dateB = new Date(`${b.sana}T${b.vaqt}`);
+            return dateA - dateB;
+        });
+
+        appointments.forEach((appointment, index) => {
+            let row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="text-center">${index + 1}</td>
+                <td>${appointment.viloyat}</td>
+                <td>${appointment.klinika}</td>
+                <td>${appointment.bolim}</td>
+                <td>${appointment.doktor}</td>
+                <td>${appointment.ism}</td>
+                <td>${appointment.telefon}</td>
+                <td class="text-center">${appointment.sana}</td>
+                <td class="text-center">${appointment.vaqt}</td>
+                <td class="text-center">${new Date(appointment.roatVaqti).toLocaleString()}</td>
+                <td class="text-center">
+                  <button class="btn btn-danger" onclick="deleteAppointment(${index})"><i class="fas fa-trash-alt"></i> O'chirish</button>
+                </td>
+            `;
+            appointmentList.appendChild(row);
+        });
+    }
+
+    function deleteAppointment(index) {
+        if (confirm("Haqiqatan ham uchrashuvni o'chirishni istaysizmi?")) {
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.splice(index, 1);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            loadAppointments();
+        }
+    }
+
+    function downloadPDF() {
+        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        doc.text('Uchrashuvlar Ro\'yxati', 14, 20);
+
+        let rows = appointments.map(appointment => [
+            appointment.viloyat,
+            appointment.klinika,
+            appointment.bolim,
+            appointment.doktor,
+            appointment.ism,
+            appointment.telefon,
+            appointment.sana,
+            appointment.vaqt,
+            new Date(appointment.roatVaqti).toLocaleString()
+        ]);
+
+        doc.autoTable({
+            startY: 25,
+            head: [['Viloyat', 'Klinika', 'Bo\'lim', 'Doktor', 'Ism', 'Telefon', 'Sana', 'Vaqt', 'Ro\'yxatdan o\'tish vaqti']],
+            body: rows
+        });
+
+        doc.save('uchrashuvlar.pdf');
+    }
+
+    function updateKlinikalar() {
+        const viloyat = document.getElementById('adminViloyat').value;
+        const klinikaSelect = document.getElementById('adminKlinika');
+        klinikaSelect.innerHTML = '<option selected>Klinikani tanlang</option>';
+
+        if (viloyat in klinikalar) {
+            klinikalar[viloyat].forEach(klinika => {
+                let option = document.createElement("option");
+                option.value = klinika;
+                option.textContent = klinika;
+                klinikaSelect.appendChild(option);
+            });
+        }
+        updateDoktorlarFilter();
+        loadAppointments();
+    }
+
+    function updateDoktorlarFilter() {
+        const viloyat = document.getElementById('adminViloyat').value;
+        const klinika = document.getElementById('adminKlinika').value;
+        const bolim = document.getElementById('adminBolim').value;
+        const doktorSelect = document.getElementById('adminDoktor');
+        doktorSelect.innerHTML = '<option selected>Doktorni tanlang</option>';
+
+        if (viloyat in doktorlar_bazasi_filter && klinika in doktorlar_bazasi_filter[viloyat] && bolim in doktorlar_bazasi_filter[viloyat][klinika]) {
+            doktorlar_bazasi_filter[viloyat][klinika][bolim].forEach(doktor => {
+                let option = document.createElement("option");
+                option.value = doktor;
+                option.textContent = doktor;
+                doktorSelect.appendChild(option);
+            });
+        }
+        loadAppointments();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAppointments();
+        document.getElementById('adminViloyat').addEventListener('change', updateKlinikalar);
+        document.getElementById('adminKlinika').addEventListener('change', updateDoktorlarFilter);
+        document.getElementById('adminBolim').addEventListener('change', updateDoktorlarFilter);
+        document.getElementById('adminDoktor').addEventListener('change', loadAppointments);
+        document.getElementById('adminSana').addEventListener('change', loadAppointments);
+    });
+</script>
+
+</body>
+</html>

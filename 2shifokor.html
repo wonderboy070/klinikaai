@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klinika</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <style> /* Umumiy stillar */
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #333;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 95%;
+        max-width: 1400px;
+        display: grid;
+        grid-template-columns: 280px 1fr; /* Sidebar uchun kengroq joy */
+    }
+
+    .sidebar {
+        background-color: #1D2A4D;
+        color: white;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    .sidebar-logo {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .sidebar-logo i {
+        font-size: 2em;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+    }
+
+    .sidebar-menu li {
+        padding: 12px 25px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+    }
+
+    .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    .sidebar-menu li a:hover,
+    .sidebar-menu li a.active {
+        background-color: #2c3e50;
+        padding-left: 30px;
+    }
+
+    .sidebar-menu li a i {
+        margin-right: 15px;
+        font-size: 1.1em;
+    }
+
+    .content-wrapper {
+        padding: 30px;
+    }
+
+    .content {
+        display: none;
+    }
+
+    .content.active {
+        display: block;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 30px;
+        text-align: left;
+        font-size: 2em;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    /* Shifokorlar bo'limi stillari */
+    #shifokorlar-section .doctors-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .doctor-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(193, 239, 245, 0.8));
+        border-radius: 10px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .doctor-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .doctor-image-container {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1), -3px -3px 7px rgba(255, 255, 255, 0.7);
+        transition: transform 0.3s ease;
+    }
+
+    .doctor-card:hover .doctor-image-container {
+        transform: scale(1.05);
+    }
+
+    .doctor-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .doctor-name {
+        font-size: 1.3em;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .doctor-position {
+        font-size: 1em;
+        color: #777;
+        margin-bottom: 8px;
+    }
+
+    .entry-button {
+        background: linear-gradient(145deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        font-weight: 500;
+        padding: 8px 15px;
+        text-decoration: none;
+        transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.7);
+        font-size: 0.9em;
+    }
+
+    .entry-button:hover {
+        background: linear-gradient(145deg, #eeeeee, #667eea);
+        transform: scale(1.05);
+        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.15), -8px -8px 15px rgba(255, 255, 255, 0.8);
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .social-links a {
+        color: crimson;
+        font-size: 20px;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+        transform: scale(1.1);
+    }
+/* Umumiy konteyner */
+#shifokor-qushish-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 50px auto;
+}
+
+/* Sarlavha */
+#shifokor-qushish-section h2 {
+    text-align: center;
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Forma elementlari */
+form label {
+    font-size: 1.1em;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+form input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+form input::placeholder {
+    color: #aaa;
+}
+
+/* Tugma */
+form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.2em;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+    /* Admin paneli stillari */
+    #admin-section .admin-panel {
+        padding: 30px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        background-color: #f7f7f7;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #admin-section .admin-panel h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 1.8em;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+    #admin-section .admin-doctors-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    #admin-section .admin-doctors-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+        background-color: white;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    #admin-section .admin-doctors-list li:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    #admin-section .admin-doctors-list .doctor-info {
+        font-weight: 500;
+        color: #444;
+    }
+
+    #admin-section .admin-doctors-list .doctor-actions button {
+        margin-left: 10px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #admin-section .admin-doctors-list .doctor-actions button.edit-btn {
+        background-color: #007bff;
+        color: white;
+    }
+
+    #admin-section .admin-doctors-list .doctor-actions button.edit-btn:hover {
+        background-color: #0056b3;
+    }
+
+    #admin-section .admin-doctors-list .doctor-actions button.delete-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    #admin-section .admin-doctors-list .doctor-actions button.delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    #admin-section .admin-panel h3 + p {
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    #admin-section .admin-panel button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        background-color: #28a745;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    #admin-section .admin-panel button:hover {
+        background-color: #1e7e34;
+    }
+
+    #admin-section .admin-panel br + br + h3 + p {
+        color: #555;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    /* Bo'limlar bo'limi stillari */
+    #bolimlar-section .departments-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    #bolimlar-section .departments-list li {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        color: #555;
+    }
+
+    #bolimlar-section .departments-list li:last-child {
+        border-bottom: none;
+    }
+
+    #bolimlar-section .departments-list li i {
+        margin-right: 10px;
+        color: #1D2A4D;
+    }
+
+    /* Ma'lumotlar bo'limi stillari */
+    #malumotlar-section .info-content {
+        line-height: 1.8;
+        color: #555;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    #malumotlar-section .info-content p {
+        margin-bottom: 15px;
+    }
+
+    #malumotlar-section .info-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Kontaktlar bo'limi stillari */
+    #kontaktlar-section .contact-info {
+        line-height: 1.8;
+        color: #555;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    #kontaktlar-section .contact-info p {
+        margin-bottom: 15px;
+    }
+
+    #kontaktlar-section .contact-info i {
+        margin-right: 10px;
+        color: #1D2A4D;
+    }
+
+    /* Sozlamalar bo'limi stillari */
+    #sozlamalar-section .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 22px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    #sozlamalar-section label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    #sozlamalar-section input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        }
+
+        #sozlamalar-section button {
+            padding: 12px 20px;
+            background-color: #1D2A4D;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        #sozlamalar-section button:hover {
+            background-color: #2c3e50;
+        }
+
+        /* Tahrirlash formasi uchun modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #editDoctorFormContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #editDoctorFormContainer label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #editDoctorFormContainer input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        #editDoctorFormContainer button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #editDoctorFormContainer button.save-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #editDoctorFormContainer button.cancel-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Mobil qurilmalar uchun adaptivlik */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr; /* Bir ustunda joylashish */
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+                flex-direction: row; /* Gorizontal joylashish */
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .sidebar-logo {
+                margin-bottom: 0;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                width: auto;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0;
+                margin-left: 5px;
+                margin-right: 5px;
+                padding: 8px 15px;
+            }
+
+            .sidebar-menu li a i {
+                margin-right: 5px;
+            }
+
+            .content-wrapper {
+                padding: 20px;
+            }
+
+            #shifokorlar-section .doctors-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-logo"><i class="fas fa-hospital-symbol"></i>
+                Klinika
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#shifokorlar-section" data-section="shifokorlar-section"><i class="fas fa-user-md"></i> Shifokorlar</a></li>
+                <li><a href="#shifokor-qushish-section" data-section="shifokor-qushish-section"><i class="fas fa-plus"></i> Qo'shish</a></li>
+                <li><a href="#admin-section" data-section="admin-section"><i class="fas fa-user-shield"></i> Admin</a></li>
+                <li><a href="#bolimlar-section" data-section="bolimlar-section"><i class="fas fa-hospital"></i> Bo'limlar</a></li>
+                <li><a href="#malumotlar-section" data-section="malumotlar-section"><i class="fas fa-info-circle"></i> Ma'lumotlar</a></li>
+                <li><a href="#kontaktlar-section" data-section="kontaktlar-section"><i class="fas fa-phone"></i> Kontaktlar</a></li>
+                <li><a href="#sozlamalar-section" data-section="sozlamalar-section"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+            </ul>
+        </div>
+        <div class="content-wrapper">
+            <div id="shifokorlar-section" class="content active">
+                <h2>Bizning Shifokorlar</h2>
+                <div class="doctors-container">
+                    </div>
+            </div>
+            <div id="shifokor-qushish-section" class="content">
+                <h2>Shifokor Qo'shish</h2>
+                <form id="addDoctorForm">
+                    <label for="ism">Ism:</label><br>
+                    <input type="text" id="ism" name="ism" placeholder="Ismingizni kiriting..."><br>
+
+                    <label for="familiya">Familiya:</label><br>
+                    <input type="text" id="familiya" name="familiya" placeholder="Familiyangizni kiriting..."><br>
+
+                    <label for="mutaxassislik">Mutaxassislik:</label><br>
+                    <input type="text" id="mutaxassislik" name="mutaxassislik" placeholder="Mutaxassislikni kiriting..."><br>
+
+                    <button type="submit">Qo'shish</button>
+                </form>
+            </div>
+
+
+            <div id="admin-section" class="content">
+                <h2>Admin Paneli</h2>
+                <div class="admin-panel">
+                    <h3>Shifokorlarni boshqarish</h3>
+                    <ul class="admin-doctors-list">
+                        </ul>
+                </div>
+                <h3>Foydalanuvchilarni boshqarish</h3>
+                <p>Bu yerda foydalanuvchilarni ro'yxatdan o'tkazish, tahrirlash va o'chirish mumkin bo'ladi.</p>
+                <button>Foydalanuvchilar ro'yxati</button>
+                <br><br>
+                <h3>Hisobotlar</h3>
+                <p>Klinika faoliyati bo'yicha turli hisobotlarni ko'rish mumkin.</p>
+                <button> посещения </button>
+            </div>
+
+            <div id="bolimlar-section" class="content">
+                <h2>Bo'limlar</h2>
+                <ul class="departments-list">
+                    <li><i class="fas fa-heartbeat"></i> Kardiologiya</li>
+                    <li><i class="fas fa-brain"></i> Nevrologiya</li>
+                    <li><i class="fas fa-child"></i> Pediatriya</li>
+                    <li><i class="fas fa-stethoscope"></i> Terapiya</li>
+                    <li><i class="fas fa-cut"></i> Jarrohlik</li>
+                </ul>
+            </div>
+
+            <div id="malumotlar-section" class="content">
+                <h2>Ma'lumotlar</h2>
+                <div class="info-content">
+                    <p>Assalomu alaykum! "Klinika" zamonaviy tibbiy markazi sizni salomlaydi.</p>
+                    <p>Bizning klinikamiz aholiga yuqori sifatli tibbiy xizmat ko'rsatish maqsadida tashkil etilgan. Bizning ustunliklarimiz:</p>
+                    <ul>
+                        <li>Tajribali va malakali shifokorlar jamoasi</li>
+                        <li>Eng so'nggi tibbiy asbob-uskunalar</li>
+                        <li>Xalqaro standartlarga javob beradigan diagnostika va davolash usullari</li>
+                        <li>Qulay va zamonaviy muhit</li>
+                        <li>Har bir bemorga individual yondashuv</li>
+                    </ul>
+                    <p>Bizning asosiy yo'nalishlarimiz:</p>
+                    <ul>
+                        <li>Turli xastaliklarni diagnostika qilish va davolash</li>
+                        <li>Profilaktik ko'riklar va maslahatlar</li>
+                        <li>Reabilitatsiya va tiklash davolash</li>
+                        <li>Tez tibbiy yordam</li>
+                    </ul>
+                    <p>Sizning salomatligingiz - bizning eng muhim vazifamiz!</p>
+                </div>
+            </div>
+
+            <div id="kontaktlar-section" class="content">
+                <h2>Kontaktlar</h2>
+                <div class="contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> Manzil: Samarqand shahri, Амир Темур кўчаси, 4</p>
+                    <p><i class="fas fa-phone"></i> Telefon: +998 (66) 233-00-03, +998 (66) 233-00-04</p>
+                    <p><i class="fas fa-envelope"></i> Email: info@klinika.uz</p>
+                    <p><i class="fas fa-clock"></i> Ish vaqti: Dushanba - Shanba, 9:00 - 18:00</p>
+                    <p><i class="fas fa-globe"></i> Veb-sayt: <a href="#">www.klinika.uz</a> (havola mavjud emas)</p>
+                </div>
+            </div>
+
+            <div id="sozlamalar-section" class="content">
+                <h2>Sozlamalar</h2>
+                <form class="settings-form">
+                    <label for="til">Til:</label>
+                    <input type="text" id="til" value="O'zbekcha">
+                    <label for="tema">Tema:</label>
+                    <input type="text" id="tema" value="Yorug'">
+                    <button type="submit">Saqlash</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="editDoctorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2>Shifokorni Tahrirlash</h2>
+            <div id="editDoctorFormContainer">
+                <input type="hidden" id="editDoctorIndex">
+                <label for="edit_ism">Ism:</label>
+                <input type="text" id="edit_ism" name="ism"><br>
+                <label for="edit_familiya">Familiya:</label>
+                <input type="text" id="edit_familiya" name="familiya"><br>
+                <label for="edit_mutaxassislik">Mutaxassislik:</label>
+                <input type="text" id="edit_mutaxassislik" name="mutaxassislik"><br>
+                <button type="button" class="save-btn">Saqlash</button>
+                <button type="button" class="cancel-btn">Bekor qilish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarMenu = document.querySelector('.sidebar-menu');
+            const contentSections = document.querySelectorAll('.content');
+            const doctorsContainer = document.querySelector('#shifokorlar-section .doctors-container');
+            const addDoctorForm = document.getElementById('addDoctorForm');
+            const editDoctorModal = document.getElementById('editDoctorModal');
+            const editDoctorFormContainer = document.getElementById('editDoctorFormContainer');
+            const closeEditModalButton = document.querySelector('.close-button');
+            const editDoctorIndexInput = document.getElementById('editDoctorIndex');
+            const editIsmInput = document.getElementById('edit_ism');
+            const editFamiliyaInput = document.getElementById('edit_familiya');
+            const editMutaxassislikInput = document.getElementById('edit_mutaxassislik');
+            const saveEditButton = editDoctorFormContainer.querySelector('.save-btn');
+            const cancelEditButton = editDoctorFormContainer.querySelector('.cancel-btn');
+            const adminDoctorsList = document.querySelector('#admin-section .admin-doctors-list');
+
+            const DOCTORS_KEY = 'doctors_data';
+            let doctors = JSON.parse(localStorage.getItem(DOCTORS_KEY)) || [
+                { id: 1, ism: 'Alisher', familiya: 'Valiyev', mutaxassislik: 'Kardiolog', rasm_url: 'doctor1.jpg', facebook: '#', instagram: '#', map: 'https://www.google.com/maps?q=Saxovat+Dorixonasi&hl=ru', telegram: 'https://t.me/saxovat_med_clinic' },
+                { id: 2, ism: 'Dilshod', familiya: 'Mahmudov', mutaxassislik: 'Nevropatolog', rasm_url: 'doctor2.jpg', facebook: '#', instagram: '#', map: 'https://www.google.com/maps?q=Saxovat+Dorixonasi&hl=ru', telegram: 'https://t.me/saxovat_med_clinic' },
+                { id: 3, ism: 'Lola', familiya: 'Abdullayeva', mutaxassislik: 'Pediatr', rasm_url: 'doctor3.jpg', facebook: '#', instagram: '#', map: 'https://www.google.com/maps?q=Saxovat+Dorixonasi&hl=ru', telegram: 'https://t.me/saxovat_med_clinic' }
+            ];
+            let nextDoctorId = doctors.length > 0 ? Math.max(...doctors.map(d => d.id)) + 1 : 1;
+            let selectedDoctorIndex = -1;
+
+            function showSection(sectionId) {
+                contentSections.forEach(section => section.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+
+                sidebarMenu.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+                sidebarMenu.querySelector(`a[data-section="${sectionId}"]`).classList.add('active');
+
+                if (sectionId === 'admin-section') {
+                    displayAdminDoctors();
+                } else if (sectionId === 'shifokorlar-section') {
+                    displayDoctors();
+                }
+            }
+
+            sidebarMenu.addEventListener('click', (event) => {
+                if (event.target.tagName === 'A') {
+                    const sectionId = event.target.dataset.section;
+                    if (sectionId) {
+                        showSection(sectionId);
+                        event.preventDefault();
+                    }
+                }
+            });
+
+            function displayDoctors() {
+                doctorsContainer.innerHTML = '';
+                doctors.forEach(doctor => {
+                    const doctorCard = document.createElement('div');
+                    doctorCard.classList.add('doctor-card');
+                    doctorCard.innerHTML = `
+                        <div class="doctor-image-container">
+                            <img src="<span class="math-inline">\{doctor\.rasm\_url \|\| 'default\.jpg'\}" alt\="</span>{doctor.ism} <span class="math-inline">\{doctor\.familiya\}" class\="doctor\-image"\>
+</div\>
+<h3 class\="doctor\-name"\></span>{doctor.ism} <span class="math-inline">\{doctor\.familiya\}</h3\>
+<p class\="doctor\-position"\></span>{doctor.mutaxassislik}</p>
+                       <div class="social-links">
+                            <a href="<span class="math-inline">\{doctor\.facebook\}"\><i class\="fab fa\-facebook"\></i\></a\>
+<a href\="</span>{doctor.instagram}"><i class="fab fa-instagram"></i></a>
+                            <a href="<span class="math-inline">\{doctor\.map\}" target\="\_blank"\><i class\="fas fa\-map\-marker\-alt"\></i\></a\>
+<a href\="</span>{doctor.telegram}" target="_blank"><i class="fab fa-telegram"></i></a>
+                        </div>
+                        <br>
+                        <a href="./sertifikat.html" class="entry-button">Kirish</a>
+                    `;
+                    doctorsContainer.appendChild(doctorCard);
+                });
+            }
+
+            function displayAdminDoctors() {
+                adminDoctorsList.innerHTML = '';
+                doctors.forEach((doctor, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <div class="doctor-info">${doctor.ism} <span class="math-inline">\{doctor\.familiya\} \(</span>{doctor.mutaxassislik})</div>
+                        <div class="doctor-actions">
+                            <button class="edit-btn" data-index="<span class="math-inline">\{index\}"\>Tahrirlash</button\>
+<button class\="delete\-btn" data\-index\="</span>{index}">O'chirish</button>
+                        </div>
+                    `;
+                    adminDoctorsList.appendChild(listItem);
+                });
+
+                // Tahrirlash va o'chirish tugmalariga event listenerlar o'rnatish (Admin bo'limida)
+                adminDoctorsList.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        if (!isNaN(index)) {
+                            openEditModal(index);
+                        }
+                    });
+                });
+
+                adminDoctorsList.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        if (!isNaN(index)) {
+                            deleteDoctor(index);
+                        }
+                    });
+                });
+            }
+
+            addDoctorForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                constconst ism = document.getElementById('ism').value;
+                const familiya = document.getElementById('familiya').value;
+                const mutaxassislik = document.getElementById('mutaxassislik').value;
+                const newDoctor = { id: nextDoctorId++, ism, familiya, mutaxassislik, rasm_url: 'default.jpg', facebook: '#', instagram: '#', map: 'https://www.google.com/maps?q=Saxovat+Dorixonasi&hl=ru', telegram: 'https://t.me/saxovat_med_clinic' };
+                doctors.push(newDoctor);
+                saveDoctors();
+                displayDoctors();
+                if (document.querySelector('#admin-section.active')) {
+                    displayAdminDoctors();
+                }
+                addDoctorForm.reset();
+                showSection('shifokorlar-section');
+            });
+
+            function openEditModal(index) {
+                selectedDoctorIndex = index;
+                const doctor = doctors[index];
+                editDoctorIndexInput.value = index;
+                editIsmInput.value = doctor.ism;
+                editFamiliyaInput.value = doctor.familiya;
+                editMutaxassislikInput.value = doctor.mutaxassislik;
+                editDoctorModal.style.display = "block";
+            }
+
+            function closeEditModal() {
+                selectedDoctorIndex = -1;
+                editDoctorModal.style.display = "none";
+            }
+
+            closeEditModalButton.addEventListener('click', closeEditModal);
+            cancelEditButton.addEventListener('click', closeEditModal);
+
+            window.addEventListener('click', (event) => {
+                if (event.target == editDoctorModal) {
+                    closeEditModal();
+                }
+            });
+
+            saveEditButton.addEventListener('click', () => {
+                if (selectedDoctorIndex !== -1) {
+                    doctors[selectedDoctorIndex].ism = editIsmInput.value;
+                    doctors[selectedDoctorIndex].familiya = editFamiliyaInput.value;
+                    doctors[selectedDoctorIndex].mutaxassislik = editMutaxassislikInput.value;
+                    saveDoctors();
+                    displayDoctors();
+                    if (document.querySelector('#admin-section.active')) {
+                        displayAdminDoctors();
+                    }
+                    closeEditModal();
+                    selectedDoctorIndex = -1;
+                } else {
+                    alert('Shifokorni tahrirlashda xatolik yuz berdi.');
+                }
+            });
+
+            function deleteDoctor(index) {
+                if (confirm('Bu shifokorni o\'chirishga ishonchingiz komilmi?')) {
+                    doctors.splice(index, 1);
+                    saveDoctors();
+                    displayDoctors();
+                    if (document.querySelector('#admin-section.active')) {
+                        displayAdminDoctors();
+                    }
+                }
+            }
+
+            function saveDoctors() {
+                localStorage.setItem(DOCTORS_KEY, JSON.stringify(doctors));
+            }
+
+            // Sahifa yuklanganda birinchi bo'limni ko'rsatish (Shifokorlar)
+            showSection('shifokorlar-section');
+            displayDoctors();
+
+            // Shifokorlar bo'limini boshqa veb-saytda ko'rsatish uchun funksiya
+            function renderDoctorsForExternalSite(containerId) {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.innerHTML = ''; // Oldingi ma'lumotlarni tozalash
+                    doctors.forEach(doctor => {
+                        const doctorCard = document.createElement('div');
+                        doctorCard.style.border = '1px solid #ccc';
+                        doctorCard.style.padding = '15px';
+                        doctorCard.style.marginBottom = '10px';
+                        doctorCard.style.borderRadius = '5px';
+                        doctorCard.innerHTML = `
+                            <h3>${doctor.ism} ${doctor.familiya}</h3>
+                            <p>Mutaxassislik: ${doctor.mutaxassislik}</p>
+                            <p><a href="./sertifikat.html">Batafsil</a></p>
+                        `;
+                        container.appendChild(doctorCard);
+                    });
+                } else {
+                    console.error(`Element with ID "${containerId}" not found.`);
+                }
+            }
+
+            // Agar boshqa veb-saytda shifokorlar ro'yxatini ko'rsatmoqchi bo'lsangiz,
+            // o'sha saytning HTML kodida quyidagi divni yarating:
+            // <div id="external-doctors-container"></div>
+            // Va o'sha saytning JavaScript kodida quyidagi funksiyani chaqiring:
+            // renderDoctorsForExternalSite('external-doctors-container');
+
+            // Eslatma: Agar rasm va boshqa murakkab elementlarni ham ko'rsatmoqchi bo'lsangiz,
+            // renderDoctorsForExternalSite funksiyasini mos ravishda o'zgartirishingiz kerak bo'ladi.
+            // Shuningdek, ushbu ma'lumotlar qanday uzatilishi (masalan, localStorage orqali)
+            // boshqa saytda ham implementatsiya qilinishi kerak.
+        });
+    </script>
+</body>
+</html>

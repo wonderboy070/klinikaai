@@ -1,0 +1,147 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Ubuntu", sans-serif;
+    box-sizing: border-box;
+    text-decoration: none;
+  }
+  
+  body{
+    height: 100vh;
+    background:  #17181F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-card{
+    width: 400px;
+    text-align: center;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #9ecaed;
+  }
+  
+  
+  .card-header{
+    background: #2d2f40;
+    padding: 60px 40px;
+  }
+  
+  .pic{
+    display: inline-block;
+    padding: 8px;
+    background: linear-gradient(130deg, #74b9ff, #e66767);
+    margin: auto;
+    border-radius: 50%;
+    background-size: 200% 200%;
+    animation: animated-gradient 2s linear infinite;
+  }
+  
+  @keyframes animated-gradient{
+    25%{
+      background-position: left bottom;
+    }
+    50%{
+      background-position: right bottom;
+    }
+    75%{
+      background-position: right top;
+    }
+    100%{
+      background-position: left top;
+    }
+  }
+  
+  .pic img{
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  
+  .name{
+    color: #EEEDF0 ;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 10px 0;
+  }
+  
+  .desc{
+    font-size: 18px;
+    color: #ffbcd9;
+  }
+  
+  .location {
+    margin: 10px 0;
+    color: #6C72CB ;
+  }
+  
+  .icons{
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .icons a{
+    color: #f2f2f2;
+    width: 56px;
+    font-size: 22px;
+    transition: .3s linear;
+  }
+  
+  .icons a:hover{
+    color: #6C72CB;
+  }
+  
+  .contact-btn{
+    display: inline-block;
+    padding: 12px 50px;
+    color: #ffbcd9;
+    border: 2px solid #6C72CB;
+    border-radius: 6px;
+    margin-top: 16px;
+    transition: .3s linear;
+  }
+  
+  .contact-btn:hover{
+    background:#6C72CB;
+    color: #f2f2f2;
+  }
+  
+  .card-footer{
+    background: #EEEDF0;
+    padding: 60px 10px;
+  }
+  
+  .numbers{
+    display: flex;
+    align-items: center;
+  }
+  
+  .item{
+    flex: 1;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #CB69C1 ;
+    font-weight: 500;
+  }
+  
+  .item span{
+    display: block;
+    color: #2c3a47;
+    font-size: 30px;
+  }
+  
+  .border{
+    width: 2px;
+    height: 30px;
+  /*   background: #bbb; */
+    background: linear-gradient(130deg, #74b9ff, #e66767);
+  }
+  
+  .instagram-account{
+    margin-top: 50px;
+    font-size: 15px;
+  }

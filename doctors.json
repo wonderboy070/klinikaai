@@ -1,0 +1,9 @@
+[
+    { "clinic": "Toshkent Klinikasi", "specialty": "Pediatr", "doctor": "Dr. Jamshid Karimov" },
+    { "clinic": "Andijon Shifoxonasi", "specialty": "Pediatr", "doctor": "Dr. Malika Ismoilova" },
+    { "clinic": "Buxoro Klinika", "specialty": "Nevropatolog", "doctor": "Dr. Diyor Abdullayev" },
+    { "clinic": "Samarqand Shifoxonasi", "specialty": "Kardiolog", "doctor": "Dr. Rustam Sobirov" },
+    { "clinic": "Farg‘ona Klinikasi", "specialty": "Nevropatolog", "doctor": "Dr. Aziza Turg‘unova" },
+    { "clinic": "Xorazm Shifoxonasi", "specialty": "Pediatr", "doctor": "Dr. Abdulla Rahimov" },
+    { "clinic": "Navoiy Klinika", "specialty": "Kardiolog", "doctor": "Dr. Dilshod Rasulov" }
+]
